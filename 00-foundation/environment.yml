@@ -13,6 +13,7 @@ dependencies:
   # Package management and lock files
   - conda-lock>=2.17.0
   - pipdeptree
+  - anaconda-cli
 
   # Development and utilities
   - pip
@@ -31,3 +32,21 @@ dependencies:
 
   # Database support
   - anysqlite
+  - pgvector
+
+  # LLM & AI Frameworks
+  - langchain
+  - llama-index
+  - pydantic>=2.0
+
+  # MCP (Model Context Protocol)
+  - mcp
+  - mcp-servers
+  - fastmcp
+
+  # Agent & Workflow Frameworks
+  - langgraph
+
+  # Async & HTTP utilities
+  - aiohttp
+  - python-dotenv
