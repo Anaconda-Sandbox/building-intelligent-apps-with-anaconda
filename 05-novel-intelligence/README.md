@@ -5,5 +5,5 @@
 |Hardware|Transformer|System Design|Artifacts|Models|
 |--------|-----------|-------------|---------|------|
 |NVIDIA GPU | TPU|    RAG|        Skills.md| NEMOTRON Models|
-|Windows ARM | | | | World Models|
+|Windows ARM | | CRAG | | World Models|
 |Apple Silicon | | | |
