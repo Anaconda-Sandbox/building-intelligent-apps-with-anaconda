@@ -1,0 +1,32 @@
+name: pycon-us-foundation
+channels:
+  - conda-forge
+dependencies:
+  # Core Python
+  - python>=3.10
+
+  # conda-pypi ecosystem
+  - conda-pypi>=0.8.0
+  - conda-rattler-solver  # Required for wheel installation with conda-pypi
+
+  # Package management and lock files
+  - conda-lock>=2.17.0
+  - pipdeptree
+
+  # Development and utilities
+  - pip
+  - pytest>=7.0
+  - packaging
+  - unearth
+
+  # HTTP/2 and networking (for conda-pypi operations)
+  - h2
+  - httpx
+  - hishel
+
+  # Data handling
+  - msgpack-python
+  - typing-extensions
+
+  # Database support
+  - anysqlite
