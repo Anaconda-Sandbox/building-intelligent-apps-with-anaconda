@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###############################################################################
-# PyCon US Foundation Environment Setup Script
+# Foundation Environment Setup Script
 # 
 # This script configures the conda environment for AI Python development,
 # including conda-pypi integration, MCP server setup, and environment variables.
@@ -58,18 +58,18 @@ check_conda_installed() {
 
 check_environment_active() {
     if [ -z "$CONDA_DEFAULT_ENV" ]; then
-        print_error "No conda environment is active. Please run: conda activate pycon-us-foundation"
+        print_error "No conda environment is active. Please run: conda activate foundation"
         exit 1
     fi
     
-    if [ "$CONDA_DEFAULT_ENV" != "pycon-us-foundation" ]; then
-        print_warning "Expected environment 'pycon-us-foundation' but found '$CONDA_DEFAULT_ENV'"
+    if [ "$CONDA_DEFAULT_ENV" != "foundation" ]; then
+        print_warning "Expected environment 'foundation' but found '$CONDA_DEFAULT_ENV'"
         print_info "Attempting to activate the correct environment..."
         # Note: This won't work in a script, so we just warn
         exit 1
     fi
     
-    print_success "Environment 'pycon-us-foundation' is active"
+    print_success "Environment 'foundation' is active"
 }
 
 ###############################################################################
@@ -146,45 +146,45 @@ setup_environment_variables() {
     
     # Create activation script
     print_info "Creating activation script..."
-    cat > "$ACTIVATE_DIR/pycon_setup.sh" << 'ACTIVATE_SCRIPT'
+    cat > "$ACTIVATE_DIR/foundation_setup.sh" << 'ACTIVATE_SCRIPT'
 #!/bin/bash
 
-# PyCon US Foundation Environment Activation Script
+# Foundation Environment Activation Script
 export PYTHONPATH="${CONDA_PREFIX}/lib:${PYTHONPATH}"
 export MCP_CONFIG="${CONDA_PREFIX}/etc/mcp"
 export MCP_LOGS="${CONDA_PREFIX}/var/log"
 export LOG_LEVEL="${LOG_LEVEL:-INFO}"
 
 # Display environment info
-echo "🎉 PyCon US Foundation environment activated!"
+echo "🎉 Foundation environment activated!"
 echo "   Python: $(python --version)"
 echo "   Prefix: $CONDA_PREFIX"
 echo "   MCP Config: $MCP_CONFIG"
 ACTIVATE_SCRIPT
     
-    chmod +x "$ACTIVATE_DIR/pycon_setup.sh"
-    print_success "Activation script created: $ACTIVATE_DIR/pycon_setup.sh"
+    chmod +x "$ACTIVATE_DIR/foundation_setup.sh"
+    print_success "Activation script created: $ACTIVATE_DIR/foundation_setup.sh"
     
     # Create deactivation script
     print_info "Creating deactivation script..."
-    cat > "$DEACTIVATE_DIR/pycon_cleanup.sh" << 'DEACTIVATE_SCRIPT'
+    cat > "$DEACTIVATE_DIR/foundation_cleanup.sh" << 'DEACTIVATE_SCRIPT'
 #!/bin/bash
 
-# PyCon US Foundation Environment Deactivation Script
+# Foundation Environment Deactivation Script
 unset PYTHONPATH
 unset MCP_CONFIG
 unset MCP_LOGS
 unset LOG_LEVEL
 
-echo "👋 PyCon US Foundation environment deactivated"
+echo "👋 Foundation environment deactivated"
 DEACTIVATE_SCRIPT
     
-    chmod +x "$DEACTIVATE_DIR/pycon_cleanup.sh"
-    print_success "Deactivation script created: $DEACTIVATE_DIR/pycon_cleanup.sh"
+    chmod +x "$DEACTIVATE_DIR/foundation_cleanup.sh"
+    print_success "Deactivation script created: $DEACTIVATE_DIR/foundation_cleanup.sh"
     
     # Source the activation script now
     print_info "Sourcing activation script..."
-    source "$ACTIVATE_DIR/pycon_setup.sh"
+    source "$ACTIVATE_DIR/foundation_setup.sh"
 }
 
 verify_packages() {
@@ -231,10 +231,10 @@ verify_packages() {
 display_summary() {
     print_header "✨ Setup Complete!"
     
-    echo -e "${GREEN}Your PyCon US Foundation environment is ready!${NC}\n"
+    echo -e "${GREEN}Your Foundation environment is ready!${NC}\n"
     
     echo -e "${BLUE}Environment Details:${NC}"
-    echo "  Environment Name: pycon-us-foundation"
+    echo "  Environment Name: foundation"
     echo "  Python Version: $(python --version 2>&1)"
     echo "  Conda Prefix: $CONDA_PREFIX"
     echo ""
@@ -265,7 +265,7 @@ display_summary() {
 ###############################################################################
 
 main() {
-    print_header "🚀 PyCon US Foundation Environment Setup"
+    print_header "🚀 Foundation Environment Setup"
     
     print_info "Starting setup at $(date)"
     
