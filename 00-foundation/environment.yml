@@ -1,4 +1,4 @@
-name: pycon-us-foundation
+name: foundation
 channels:
   - main
   - conda-forge
