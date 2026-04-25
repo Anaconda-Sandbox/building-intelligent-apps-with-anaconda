@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-# Getting Started
-
-This is the first task. Although this tutorial was built to be explored sequentially, this section is the only section that is required to complete all following sections. 
-
-Follow these directions to set up your environment, data sources, remote compute and architecture resources that will serve you throughout the tutorial -- regardless of where you jump in.
-
-## Build your environment
-
-`conda create -n intelligent-apps-demo > environment.yml`
-
-`conda activate intelligent-apps-demo`
-
-## Sign up for an Anaconda Account
-
-## Download Anaconda Desktop
-
-## Connect to your cloud services: AWS, GCP, Azure, Snowflake, Databricks
-
-## Get a BREV Account for GPU enabled compute 
-
-## 
-=======
 # Foundation: AI Python Development Environment Setup
 
 Welcome to the Foundation demo! This section sets up a complete environment for building intelligent applications with Python, including LLM frameworks, MCP servers, and agent orchestration tools.
@@ -64,7 +41,7 @@ This will:
 ### Step 2: Activate the Environment
 
 ```bash
-conda activate foundation
+conda activate data-foundations
 ```
 
 ### Step 3: Run the Setup Script
@@ -208,7 +185,7 @@ To remove the environment:
 conda deactivate
 
 # Remove the environment
-conda env remove --name foundation
+conda env remove --name data-foundations
 
 # (Optional) Remove the channels and revert solver
 conda config --remove channels https://github.com/conda-incubator/conda-pypi-test/releases/download
@@ -229,7 +206,7 @@ After completing this foundation setup, you'll be ready for:
 **Solution:** Ensure `conda-rattler-solver` is installed and run `conda config --set solver rattler`
 
 ### Issue: ModuleNotFoundError for LangChain or LlamaIndex
-**Solution:** Verify the environment is activated: `conda activate foundation`
+**Solution:** Verify the environment is activated: `conda activate data-foundations`
 
 ### Issue: MCP command not found
 **Solution:** Reinstall the mcp package: `conda install mcp -y`
@@ -253,4 +230,3 @@ Have suggestions or improvements? We'd love to hear from you! Check out the main
 ---
 
 **Happy coding! 🚀 Let's build intelligent applications together.**
->>>>>>> 935d55c6383b01e061315857f5a40edd951a4ab4

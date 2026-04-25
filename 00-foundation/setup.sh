@@ -58,18 +58,18 @@ check_conda_installed() {
 
 check_environment_active() {
     if [ -z "$CONDA_DEFAULT_ENV" ]; then
-        print_error "No conda environment is active. Please run: conda activate foundation"
+        print_error "No conda environment is active. Please run: conda activate data-foundations"
         exit 1
     fi
     
-    if [ "$CONDA_DEFAULT_ENV" != "foundation" ]; then
-        print_warning "Expected environment 'foundation' but found '$CONDA_DEFAULT_ENV'"
+    if [ "$CONDA_DEFAULT_ENV" != "data-foundations" ]; then
+        print_warning "Expected environment 'data-foundations' but found '$CONDA_DEFAULT_ENV'"
         print_info "Attempting to activate the correct environment..."
         # Note: This won't work in a script, so we just warn
         exit 1
     fi
     
-    print_success "Environment 'foundation' is active"
+    print_success "Environment 'data-foundations' is active"
 }
 
 ###############################################################################
@@ -146,45 +146,45 @@ setup_environment_variables() {
     
     # Create activation script
     print_info "Creating activation script..."
-    cat > "$ACTIVATE_DIR/foundation_setup.sh" << 'ACTIVATE_SCRIPT'
+    cat > "$ACTIVATE_DIR/data_foundations_setup.sh" << 'ACTIVATE_SCRIPT'
 #!/bin/bash
 
-# Foundation Environment Activation Script
+# Data Foundations Environment Activation Script
 export PYTHONPATH="${CONDA_PREFIX}/lib:${PYTHONPATH}"
 export MCP_CONFIG="${CONDA_PREFIX}/etc/mcp"
 export MCP_LOGS="${CONDA_PREFIX}/var/log"
 export LOG_LEVEL="${LOG_LEVEL:-INFO}"
 
 # Display environment info
-echo "🎉 Foundation environment activated!"
+echo "🎉 Data Foundations environment activated!"
 echo "   Python: $(python --version)"
 echo "   Prefix: $CONDA_PREFIX"
 echo "   MCP Config: $MCP_CONFIG"
 ACTIVATE_SCRIPT
     
-    chmod +x "$ACTIVATE_DIR/foundation_setup.sh"
-    print_success "Activation script created: $ACTIVATE_DIR/foundation_setup.sh"
+    chmod +x "$ACTIVATE_DIR/data_foundations_setup.sh"
+    print_success "Activation script created: $ACTIVATE_DIR/data_foundations_setup.sh"
     
     # Create deactivation script
     print_info "Creating deactivation script..."
-    cat > "$DEACTIVATE_DIR/foundation_cleanup.sh" << 'DEACTIVATE_SCRIPT'
+    cat > "$DEACTIVATE_DIR/data_foundations_cleanup.sh" << 'DEACTIVATE_SCRIPT'
 #!/bin/bash
 
-# Foundation Environment Deactivation Script
+# Data Foundations Environment Deactivation Script
 unset PYTHONPATH
 unset MCP_CONFIG
 unset MCP_LOGS
 unset LOG_LEVEL
 
-echo "👋 Foundation environment deactivated"
+echo "👋 Data Foundations environment deactivated"
 DEACTIVATE_SCRIPT
     
-    chmod +x "$DEACTIVATE_DIR/foundation_cleanup.sh"
-    print_success "Deactivation script created: $DEACTIVATE_DIR/foundation_cleanup.sh"
+    chmod +x "$DEACTIVATE_DIR/data_foundations_cleanup.sh"
+    print_success "Deactivation script created: $DEACTIVATE_DIR/data_foundations_cleanup.sh"
     
     # Source the activation script now
     print_info "Sourcing activation script..."
-    source "$ACTIVATE_DIR/foundation_setup.sh"
+    source "$ACTIVATE_DIR/data_foundations_setup.sh"
 }
 
 verify_packages() {
@@ -231,10 +231,10 @@ verify_packages() {
 display_summary() {
     print_header "✨ Setup Complete!"
     
-    echo -e "${GREEN}Your Foundation environment is ready!${NC}\n"
+    echo -e "${GREEN}Your Data Foundations environment is ready!${NC}\n"
     
     echo -e "${BLUE}Environment Details:${NC}"
-    echo "  Environment Name: foundation"
+    echo "  Environment Name: data-foundations"
     echo "  Python Version: $(python --version 2>&1)"
     echo "  Conda Prefix: $CONDA_PREFIX"
     echo ""

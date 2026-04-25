@@ -1,4 +1,4 @@
-name: foundation
+name: data-foundations
 channels:
   - main
   - conda-forge

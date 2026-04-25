@@ -1,3 +1,6 @@
 [submodule "01-data-sources/polars_demo"]
 	path = 01-data-sources/polars_demo
 	url = git@github.com:dbouquin/polars_demo.git
+[submodule "100-example-applications/polars_demo"]
+	path = 100-example-applications/polars_demo
+	url = git@github.com:dbouquin/polars_demo.git
