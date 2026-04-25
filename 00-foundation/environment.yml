@@ -1,5 +1,6 @@
 name: pycon-us-foundation
 channels:
+  - main
   - conda-forge
 dependencies:
   # Core Python
