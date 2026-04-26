@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exoplanet Light Curve Explorer</title>
+
+  <!-- PyScript 2025.11.1 — Python in the browser via Pyodide/WASM -->
+  <!-- Anaconda launched PyScript at PyCon US 2022. -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --muted:    #8b949e;
+      --text:     #e6edf3;
+      --blue:     #1f6feb;
+      --blue-hi:  #388bfd;
+      --green:    #3fb950;
+      --yellow:   #d29922;
+      --red:      #f85149;
+      --mono:     "SF Mono", "Consolas", "Fira Code", monospace;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    header h1 { font-size: 1.2rem; font-weight: 700; }
+    header p  { color: var(--muted); font-size: 0.8rem; margin-top: 0.15rem; }
+    .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .badge-blue  { background: var(--blue); color: #fff; }
+    .badge-green { background: #1a3a1a; color: var(--green); border: 1px solid var(--green); }
+
+    main {
+      max-width: 1040px;
+      margin: 1.75rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+    }
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Selector ─────────────────────────── */
+    .selector-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .selector-label { font-size: 0.875rem; color: var(--muted); white-space: nowrap; }
+
+    select#target-select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 2.2rem 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      min-width: 270px;
+    }
+    select#target-select:focus { outline: 2px solid var(--blue); border-radius: 6px; }
+
+    #run-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.55rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    #run-btn:hover:not(:disabled) { background: var(--blue-hi); }
+    #run-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+    #target-info-box {
+      margin-top: 0.9rem;
+      padding: 0.8rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    #target-info-box strong { color: var(--text); }
+
+    #runtime-status {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Pipeline log ─────────────────────── */
+    #pipeline-log {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.85;
+      color: var(--muted);
+      min-height: 2rem;
+      max-height: 14rem;
+      overflow-y: auto;
+    }
+    .step-ok  { color: var(--green); }
+    .step-run { color: var(--yellow); }
+    .step-err { color: var(--red); }
+
+    /* ── Stats ────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+      gap: 0.75rem;
+    }
+    .stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+    }
+    .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-size: 1.25rem; font-weight: 700; margin-top: 0.2rem; }
+    .ok    { color: var(--green); }
+    .warn  { color: var(--yellow); }
+    .error { color: var(--red); }
+
+    /* ── Charts ───────────────────────────── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .chart-full { grid-column: 1 / -1; }
+    .chart-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .charts-grid img { max-width: 100%; border-radius: 4px; display: block; }
+
+    #results-section { display: none; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #484f58;
+      font-size: 0.78rem;
+      line-height: 1.8;
+    }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 620px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .chart-full, .chart-half { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🌟 Exoplanet Light Curve Explorer</h1>
+    <p>Module 08 · Option A — same pipeline as Module 01, running in your browser</p>
+  </div>
+  <div class="badges">
+    <span class="badge badge-blue">PyScript + Pyodide</span>
+    <span class="badge badge-green">No server · WebAssembly</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- Step 1 — Target selection -->
+  <div class="card">
+    <div class="card-title">Step 1 — Choose a stellar target</div>
+    <div class="selector-row">
+      <span class="selector-label">Target system:</span>
+      <select id="target-select">
+        <option value="wasp18b">WASP-18 b — hot Jupiter, ultra-short period (0.94 d)</option>
+        <option value="wasp12b">WASP-12 b — tidally disrupting hot Jupiter (1.09 d)</option>
+        <option value="hd209458b">HD 209458 b — first transiting exoplanet (3.52 d)</option>
+        <option value="trappist1e">TRAPPIST-1 e — rocky, habitable zone (6.10 d)</option>
+        <option value="kepler7b">Kepler-7 b — inflated hot Jupiter, high albedo (4.89 d)</option>
+      </select>
+      <button id="run-btn" disabled>⏳ Loading Python…</button>
+    </div>
+    <div id="target-info-box">Select a target to see details.</div>
+    <div id="runtime-status">⏳ Loading Pyodide runtime (~10 MB on first load, cached after)…</div>
+  </div>
+
+  <!-- Step 2 — Pipeline log -->
+  <div class="card">
+    <div class="card-title">Step 2 — Pipeline execution log</div>
+    <div id="pipeline-log">Ready. Choose a target and press Run Analysis.</div>
+  </div>
+
+  <!-- Results -->
+  <div id="results-section">
+
+    <div class="card">
+      <div class="card-title">Step 3 — Validation report</div>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 4 — Charts</div>
+      <div class="charts-grid">
+        <div class="chart-full">
+          <div class="chart-label">Phase-folded light curve + IsolationForest anomalies</div>
+          <div id="chart-lightcurve"></div>
+        </div>
+        <div>
+          <div class="chart-label">Anomaly score distribution</div>
+          <div id="chart-scores"></div>
+        </div>
+        <div>
+          <div class="chart-label">Flux residual (LC_DETREND − MODEL_INIT) coloured by score</div>
+          <div id="chart-residual"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  Data synthesised from published TESS phase-folded light curve parameters.<br>
+  Same IsolationForest pipeline and validation schema as
+  <a href="https://github.com/Anaconda-Sandbox/building-intelligent-apps-with-anaconda/tree/main/01-data-sources">Module 01</a>
+  — running entirely in your browser via
+  <a href="https://pyscript.net">PyScript</a> +
+  <a href="https://pyodide.org">Pyodide</a> (WebAssembly).<br>
+  PyScript was launched by Anaconda at PyCon US 2022.
+</footer>
+
+<!--
+  Python runs here via Pyodide (full CPython compiled to WebAssembly).
+  Packages bundled in Pyodide — no micropip or network call after initial load:
+    numpy, pandas, matplotlib, scikit-learn
+
+  Pipeline mirrors Module 01 ingestion.py:
+    Schema: PHASE, LC_DETREND, MODEL_INIT
+    Steps:  synthesise → validate → IsolationForest → three charts
+-->
+<script type="py" config='{"packages": ["matplotlib", "scikit-learn"]}'>
+import io, base64
+import numpy as np
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from sklearn.ensemble import IsolationForest
+from pyscript import document
+from js import console
+
+# ── Colour palette ────────────────────────────────────────────────────────────
+C = {
+    "bg":      "#0d1117",
+    "surface": "#161b22",
+    "border":  "#30363d",
+    "muted":   "#8b949e",
+    "text":    "#e6edf3",
+    "blue":    "#388bfd",
+    "green":   "#3fb950",
+    "yellow":  "#d29922",
+    "red":     "#f85149",
+}
+
+# ── Target catalogue ──────────────────────────────────────────────────────────
+# Each target encodes published orbital parameters used to synthesise a
+# realistic phase-folded TESS light curve (PHASE, LC_DETREND, MODEL_INIT).
+# Sources: NASA Exoplanet Archive; published TESS sector light curves.
+
+TARGETS = {
+    "wasp18b": {
+        "name":    "WASP-18 b",
+        "type":    "Hot Jupiter",
+        "period":  "0.94 days",
+        "depth":   0.0101,
+        "dur":     0.042,
+        "n":       1800,
+        "noise":   0.00032,
+        "desc": (
+            "<strong>WASP-18 b</strong> is an ultra-hot Jupiter in a 0.94-day orbit — "
+            "one of the shortest known. Its host star is being tidally heated by the "
+            "10× Jupiter-mass companion. TESS observed it in Sectors 2, 29, 69. "
+            "Transit depth ~1.01%, duration ~1.9 hours."
+        ),
+    },
+    "wasp12b": {
+        "name":    "WASP-12 b",
+        "type":    "Hot Jupiter",
+        "period":  "1.09 days",
+        "depth":   0.0143,
+        "dur":     0.055,
+        "n":       1600,
+        "noise":   0.00038,
+        "desc": (
+            "<strong>WASP-12 b</strong> is one of the hottest and most inflated known hot Jupiters. "
+            "It orbits so close that tidal forces are likely disrupting its outer layers. "
+            "Transit depth ~1.43%. Dayside temperatures exceed 2900 K."
+        ),
+    },
+    "hd209458b": {
+        "name":    "HD 209458 b",
+        "type":    "Hot Jupiter",
+        "period":  "3.52 days",
+        "depth":   0.0147,
+        "dur":     0.065,
+        "n":       2200,
+        "noise":   0.00028,
+        "desc": (
+            "<strong>HD 209458 b</strong> ('Osiris') was the first exoplanet confirmed to transit "
+            "its star (1999) and the first whose atmosphere was detected. "
+            "Transit depth ~1.47%, 3.52-day period. TESS observed it at 2-minute cadence."
+        ),
+    },
+    "trappist1e": {
+        "name":    "TRAPPIST-1 e",
+        "type":    "Rocky — habitable zone",
+        "period":  "6.10 days",
+        "depth":   0.00350,
+        "dur":     0.038,
+        "n":       3200,
+        "noise":   0.00060,
+        "desc": (
+            "<strong>TRAPPIST-1 e</strong> is one of three potentially habitable planets in the "
+            "TRAPPIST-1 system. At 1.07 Earth radii it is among the most Earth-like known. "
+            "The host is an M8 ultracool dwarf — the shallow 0.35% transit is challenging but "
+            "detectable with TESS."
+        ),
+    },
+    "kepler7b": {
+        "name":    "Kepler-7 b",
+        "type":    "Inflated Hot Jupiter",
+        "period":  "4.89 days",
+        "depth":   0.0083,
+        "dur":     0.072,
+        "n":       2600,
+        "noise":   0.00041,
+        "desc": (
+            "<strong>Kepler-7 b</strong> has one of the lowest densities of any known exoplanet — "
+            "roughly the density of styrofoam. Its high geometric albedo (0.35) was mapped via "
+            "Kepler phase curves, revealing a reflective cloud deck on the western hemisphere. "
+            "Transit depth ~0.83%, radius ~1.6 R_Jupiter."
+        ),
+    },
+}
+
+# ── Data synthesis ────────────────────────────────────────────────────────────
+
+def synthesise(key: str, seed: int = 42) -> pd.DataFrame:
+    """
+    Synthesise a phase-folded TESS light curve from published parameters.
+    Schema: PHASE, LC_DETREND, MODEL_INIT  — same as Module 01.
+
+    Uses a limb-darkened transit profile (Mandel-Agol approximation) plus
+    white + correlated (red) noise at realistic TESS photometric levels.
+    """
+    rng = np.random.default_rng(seed)
+    t = TARGETS[key]
+    depth, dur, n, noise_std = t["depth"], t["dur"], t["n"], t["noise"]
+
+    phase = np.sort(rng.uniform(-0.5, 0.5, n))
+
+    def transit(ph):
+        model = np.ones_like(ph)
+        in_t  = np.abs(ph) < dur
+        x     = np.abs(ph[in_t]) / dur          # 0 at centre, 1 at contact
+        # Quadratic limb darkening (u1=0.4, u2=0.3)
+        mu    = np.sqrt(np.maximum(1 - x**2, 0))
+        ld    = 1 - 0.4*(1 - mu) - 0.3*(1 - mu)**2
+        model[in_t] = 1 - depth * ld * (1 - x**2)
+        return model
+
+    model_init = transit(phase)
+    white = rng.normal(0, noise_std, n)
+    red   = np.convolve(rng.normal(0, noise_std * 0.35, n), np.ones(12)/12, mode="same")
+    lc    = model_init + white + red
+
+    return pd.DataFrame({"PHASE": phase, "LC_DETREND": lc, "MODEL_INIT": model_init})
+
+# ── Validation (mirrors Module 01 ingestion.py) ───────────────────────────────
+
+def validate(df: pd.DataFrame) -> dict:
+    return {
+        "n_rows":      len(df),
+        "nulls":       int(df.isnull().sum().sum()),
+        "n_dupes":     len(df) - df["PHASE"].nunique(),
+        "flux_std":    float(df["LC_DETREND"].std()),
+        "phase_range": (float(df["PHASE"].min()), float(df["PHASE"].max())),
+        "flux_range":  (float(df["LC_DETREND"].min()), float(df["LC_DETREND"].max())),
+    }
+
+# ── Anomaly detection (same params as Module 01) ──────────────────────────────
+
+def detect_anomalies(df: pd.DataFrame) -> dict:
+    X  = df[["PHASE", "LC_DETREND", "MODEL_INIT"]].values
+    iso = IsolationForest(n_estimators=100, contamination=0.05, random_state=42)
+    labels  = iso.fit_predict(X)
+    scores  = -iso.decision_function(X)
+    is_anom = labels == -1
+    n_anom  = int(is_anom.sum())
+    baseline   = float(df["LC_DETREND"][~is_anom].mean()) if (~is_anom).any() else 1.0
+    min_flux   = float(df["LC_DETREND"][is_anom].min())   if n_anom > 0 else baseline
+    depth_pct  = (baseline - min_flux) / baseline * 100   if n_anom > 0 else 0.0
+    return {
+        "is_anomaly":        is_anom,
+        "scores":            scores,
+        "n_anomalies":       n_anom,
+        "baseline":          baseline,
+        "transit_depth_pct": depth_pct,
+    }
+
+# ── Chart helpers ─────────────────────────────────────────────────────────────
+
+def _b64(fig) -> str:
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=130, bbox_inches="tight", facecolor=C["bg"])
+    plt.close(fig)
+    buf.seek(0)
+    return base64.b64encode(buf.read()).decode()
+
+def _ax(ax):
+    ax.set_facecolor(C["surface"])
+    for s in ax.spines.values(): s.set_edgecolor(C["border"])
+    ax.tick_params(colors=C["muted"], labelsize=8)
+    ax.xaxis.label.set_color(C["muted"])
+    ax.yaxis.label.set_color(C["muted"])
+    ax.title.set_color(C["text"])
+
+def chart_lc(df, res, name):
+    """Main light curve: scatter + model + anomaly markers, with residual panel."""
+    fig, (ax1, ax2) = plt.subplots(
+        2, 1, figsize=(9, 5.5), sharex=True, facecolor=C["bg"],
+        gridspec_kw={"height_ratios": [3, 1], "hspace": 0.06},
+    )
+    fig.patch.set_facecolor(C["bg"])
+    _ax(ax1); _ax(ax2)
+
+    ia = res["is_anomaly"]
+    ok = ~ia
+    si = np.argsort(df["PHASE"].values)
+
+    ax1.scatter(df["PHASE"][ok],  df["LC_DETREND"][ok],
+                s=2.5, c=C["blue"],   alpha=0.45, label="Normal")
+    ax1.scatter(df["PHASE"][ia],  df["LC_DETREND"][ia],
+                s=14,  c=C["red"],    alpha=0.85, marker="^",
+                label=f"Anomaly ({res['n_anomalies']})", zorder=3)
+    ax1.plot(df["PHASE"].values[si], df["MODEL_INIT"].values[si],
+             c=C["green"], lw=1.4, alpha=0.9, label="Model", zorder=4)
+    ax1.axhline(res["baseline"], color=C["yellow"], lw=0.8,
+                ls="--", alpha=0.7, label="Baseline")
+    ax1.set_ylabel("Norm. flux (LC_DETREND)", fontsize=9)
+    ax1.set_title(f"{name} — Phase-Folded Light Curve", fontsize=10, pad=8)
+    ax1.legend(fontsize=7, framealpha=0.15, labelcolor=C["text"],
+               facecolor=C["bg"], edgecolor=C["border"])
+
+    resid = df["LC_DETREND"].values - df["MODEL_INIT"].values
+    ax2.scatter(df["PHASE"][ok], resid[ok],  s=2,  c=C["muted"], alpha=0.4)
+    ax2.scatter(df["PHASE"][ia], resid[ia],  s=10, c=C["red"],   alpha=0.8, marker="^")
+    ax2.axhline(0, color=C["border"], lw=0.8)
+    ax2.set_xlabel("Phase", fontsize=9)
+    ax2.set_ylabel("Residual", fontsize=9)
+    return _b64(fig)
+
+def chart_scores(df, res):
+    """Histogram: anomaly score distribution, normal vs anomalous populations."""
+    fig, ax = plt.subplots(figsize=(4.5, 3.5), facecolor=C["bg"])
+    _ax(ax)
+    s, ia = res["scores"], res["is_anomaly"]
+    bins  = np.linspace(s.min(), s.max(), 38)
+    ax.hist(s[~ia], bins=bins, color=C["blue"], alpha=0.7, label="Normal")
+    ax.hist(s[ia],  bins=bins, color=C["red"],  alpha=0.85, label="Anomaly")
+    ax.axvline(np.percentile(s, 95), color=C["yellow"],
+               lw=1, ls="--", label="p95 threshold")
+    ax.set_xlabel("Anomaly score", fontsize=9)
+    ax.set_ylabel("Count", fontsize=9)
+    ax.set_title("Score Distribution", fontsize=9, pad=6)
+    ax.legend(fontsize=7, framealpha=0.15, labelcolor=C["text"],
+              facecolor=C["bg"], edgecolor=C["border"])
+    return _b64(fig)
+
+def chart_residual(df, res):
+    """Residual coloured by anomaly score — shows where the transit signal is."""
+    fig, ax = plt.subplots(figsize=(4.5, 3.5), facecolor=C["bg"])
+    _ax(ax)
+    resid = df["LC_DETREND"].values - df["MODEL_INIT"].values
+    s, ia = res["scores"], res["is_anomaly"]
+    sc = ax.scatter(df["PHASE"], resid, c=s, cmap="RdYlBu_r",
+                    s=3, alpha=0.6, vmin=s.min(), vmax=np.percentile(s, 97))
+    ax.scatter(df["PHASE"][ia], resid[ia], s=12, c=C["red"],
+               marker="^", zorder=4, alpha=0.9, label="Anomaly")
+    ax.axhline(0, color=C["border"], lw=0.8)
+    cb = fig.colorbar(sc, ax=ax, pad=0.02)
+    cb.ax.tick_params(colors=C["muted"], labelsize=7)
+    cb.set_label("Anomaly score", color=C["muted"], fontsize=8)
+    ax.set_xlabel("Phase", fontsize=9)
+    ax.set_ylabel("Residual", fontsize=9)
+    ax.set_title("Residual by Phase", fontsize=9, pad=6)
+    ax.legend(fontsize=7, framealpha=0.15, labelcolor=C["text"],
+              facecolor=C["bg"], edgecolor=C["border"])
+    return _b64(fig)
+
+# ── DOM utilities ─────────────────────────────────────────────────────────────
+
+def log(msg, cls="step-run"):
+    el = document.querySelector("#pipeline-log")
+    el.innerHTML += f'<div class="{cls}">{msg}</div>'
+    el.scrollTop = el.scrollHeight
+
+def inject_img(el_id, b64, alt="chart"):
+    document.querySelector(f"#{el_id}").innerHTML = (
+        f'<img src="data:image/png;base64,{b64}" alt="{alt}" />'
+    )
+
+def stat_html(label, value, level="ok"):
+    return (
+        f"<div class='stat'>"
+        f"<div class='stat-label'>{label}</div>"
+        f"<div class='stat-value {level}'>{value}</div>"
+        f"</div>"
+    )
+
+# ── Target info update ────────────────────────────────────────────────────────
+
+def update_info(event=None):
+    key = document.querySelector("#target-select").value
+    t   = TARGETS.get(key, {})
+    document.querySelector("#target-info-box").innerHTML = (
+        t.get("desc", "") +
+        f"<br><span style='color:var(--text)'>"
+        f"Period: <strong>{t.get('period','')}</strong> &nbsp;·&nbsp; "
+        f"Type: <strong>{t.get('type','')}</strong> &nbsp;·&nbsp; "
+        f"Transit depth: <strong>{t.get('depth',0)*100:.3f}%</strong>"
+        f"</span>"
+    )
+
+# ── Main pipeline ─────────────────────────────────────────────────────────────
+
+def run(event=None):
+    key = document.querySelector("#target-select").value
+    t   = TARGETS[key]
+    btn = document.querySelector("#run-btn")
+    btn.disabled = True
+    btn.textContent = "⏳ Running…"
+
+    document.querySelector("#pipeline-log").innerHTML = ""
+
+    try:
+        # 1 — Synthesise
+        log(f"[1/5] Synthesising {t['name']} light curve ({t['n']:,} points)…")
+        df = synthesise(key)
+        log(f"      ✓ Generated {len(df):,} phase-folded observations", "step-ok")
+
+        # 2 — Validate
+        log("[2/5] Validating schema · nulls · flux std · duplicate phases…")
+        report = validate(df)
+        nf = "✓" if report["nulls"] == 0 else "✗"
+        log(
+            f"      {nf} nulls={report['nulls']}  "
+            f"flux_std={report['flux_std']:.6f}  "
+            f"phase=[{report['phase_range'][0]:.3f}, {report['phase_range'][1]:.3f}]  "
+            f"dupes={report['n_dupes']}",
+            "step-ok",
+        )
+
+        # 3 — IsolationForest
+        log("[3/5] Running IsolationForest (n_estimators=100, contamination=0.05)…")
+        res = detect_anomalies(df)
+        log(
+            f"      ✓ {res['n_anomalies']} anomalies  "
+            f"transit depth ≈ {res['transit_depth_pct']:.3f}%  "
+            f"baseline flux = {res['baseline']:.6f}",
+            "step-ok",
+        )
+
+        # 4 — Validation report card
+        log("[4/5] Rendering validation report…")
+        al = "warn" if res["n_anomalies"] > 0 else "ok"
+        nl = "ok" if report["nulls"] == 0 else "error"
+        document.querySelector("#stats-grid").innerHTML = "".join([
+            stat_html("Target",        t["name"]),
+            stat_html("Rows",          f'{report["n_rows"]:,}'),
+            stat_html("Null values",   str(report["nulls"]), nl),
+            stat_html("Flux std",      f'{report["flux_std"]:.7f}'),
+            stat_html("Phase range",   f'{report["phase_range"][0]:.3f}–{report["phase_range"][1]:.3f}'),
+            stat_html("Anomalies",     str(res["n_anomalies"]), al),
+            stat_html("Transit depth", f'{res["transit_depth_pct"]:.3f}%',
+                      "warn" if res["transit_depth_pct"] > 0 else "ok"),
+        ])
+        log("      ✓ Validation report complete", "step-ok")
+
+        # 5 — Charts
+        log("[5/5] Rendering three charts…")
+        inject_img("chart-lightcurve", chart_lc(df, res, t["name"]), "light curve")
+        inject_img("chart-scores",     chart_scores(df, res),        "score distribution")
+        inject_img("chart-residual",   chart_residual(df, res),      "residual")
+        log("      ✓ All charts rendered", "step-ok")
+
+        log(
+            f"Pipeline complete — {t['name']} · "
+            f"{res['n_anomalies']} anomalies · "
+            f"depth ≈ {res['transit_depth_pct']:.3f}%",
+            "step-ok",
+        )
+
+        document.querySelector("#results-section").style.display = "block"
+
+    except Exception as e:
+        log(f"✗ Error: {e}", "step-err")
+        console.error(str(e))
+    finally:
+        btn.disabled = False
+        btn.textContent = "▶ Run Analysis"
+
+# ── Wire events ───────────────────────────────────────────────────────────────
+
+document.querySelector("#target-select").addEventListener("change", update_info)
+document.querySelector("#run-btn").addEventListener("click", run)
+
+# Initialise info box + enable button
+update_info()
+document.querySelector("#run-btn").disabled      = False
+document.querySelector("#run-btn").textContent   = "▶ Run Analysis"
+document.querySelector("#runtime-status").textContent = (
+    "✓ Pyodide ready — numpy · pandas · matplotlib · scikit-learn loaded"
+)
+document.querySelector("#runtime-status").style.color = "#3fb950"
+document.querySelector("#pipeline-log").textContent   = (
+    "Ready. Choose a target above and press Run Analysis."
+)
+</script>
+
+</body>
+</html>

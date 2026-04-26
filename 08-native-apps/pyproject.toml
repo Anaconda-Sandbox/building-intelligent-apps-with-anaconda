@@ -1,0 +1,106 @@
+[tool.briefcase]
+project_name = "Lightcurve Explorer"
+bundle      = "com.anaconda.demos"
+version     = "0.1.0"
+url         = "https://github.com/Anaconda-Sandbox/building-intelligent-apps-with-anaconda"
+author      = "Anaconda DevRel"
+author_email = "devrel@anaconda.com"
+
+[tool.briefcase.app.lightcurve]
+formal_name = "Lightcurve Explorer"
+description = "Exoplanet light curve analysis — Module 08, Option B"
+long_description = """
+Explore TESS exoplanet light curve data as a native app.
+Choose from five real stellar systems, run the same IsolationForest
+pipeline from Module 01, and view validation stats + anomaly table —
+all rendered with Toga's native OS widgets.
+
+Built with BeeWare (Briefcase + Toga), funded by Anaconda.
+https://www.anaconda.com/blog/beeware-mobile-python
+"""
+icon    = "icons/lightcurve"
+sources = ["src/lightcurve"]
+
+requires = [
+    # Data pipeline — same as Module 01.
+    # Using numpy + scikit-learn (pandas avoided: heavy for mobile).
+    # Cross-platform desktop binaries ship with Briefcase.
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    # pandas optional — used on desktop only; comment out for mobile builds
+    # if binary wheels are not yet available for your target.
+    "pandas>=2.0",
+]
+
+# ── Desktop targets ────────────────────────────────────────────────────────────
+
+[tool.briefcase.app.lightcurve.macOS]
+# Produces a .app bundle (runnable) and optionally a .dmg installer.
+# Both Intel and Apple Silicon via universal2 binary.
+# Distribute: drag-to-Applications .dmg, or submit to Mac App Store.
+# Build:    briefcase build macOS
+# Package:  briefcase package macOS          → .dmg
+# App Store:briefcase package macOS --adhoc-sign  (then use Xcode Organizer)
+universal_build = true
+requires = [
+    "std-nslog~=1.0.0",
+]
+
+[tool.briefcase.app.lightcurve.windows]
+# Produces a .msi installer via WiX toolset (bundled in Briefcase).
+# Distributable to any Windows 10+ machine without Python installed.
+# Build:    briefcase build windows
+# Package:  briefcase package windows        → .msi
+# Signing:  briefcase package windows --adhoc-sign
+requires = []
+
+[tool.briefcase.app.lightcurve.linux]
+# Produces an AppImage by default (runs on most Linux distros without install).
+# Also supports .deb, .rpm, Flatpak via --packaging-format flag.
+# Build:    briefcase build linux
+# Package:  briefcase package linux                          → AppImage
+#           briefcase package linux -p deb                  → .deb
+#           briefcase package linux -p rpm                  → .rpm
+requires = [
+    "toga-gtk~=0.4.0",
+]
+
+[tool.briefcase.app.lightcurve.linux.system.ubuntu]
+# System packages needed to build the GTK backend on Ubuntu.
+# Briefcase will install these automatically if run with sudo, or
+# prompt you to install them manually.
+system_requires = [
+    "libgirepository1.0-dev",
+    "libcairo2-dev",
+    "libpango1.0-dev",
+    "libwebkit2gtk-4.0-37",
+    "gir1.2-webkit2-4.0",
+]
+
+# ── Mobile targets ─────────────────────────────────────────────────────────────
+# Anaconda funds BeeWare and is actively adding iOS/Android binary wheels
+# for numpy and scikit-learn. Desktop builds work fully today.
+# For mobile, remove pandas from requires[] above; use pure-Python fallback.
+
+[tool.briefcase.app.lightcurve.iOS]
+# Requires macOS + Xcode. Cannot build iOS apps on Windows or Linux.
+# Simulator: briefcase run iOS
+# Device:    briefcase run iOS -d "iPhone 15"
+# App Store: briefcase package iOS  (requires Apple Developer account)
+requires = [
+    # numpy iOS wheels being added by Anaconda OSS team (2025).
+    # If build fails, remove numpy/scikit-learn and use the pure-Python
+    # fallback synthesiser in app.py (set USE_NUMPY = False).
+]
+
+[tool.briefcase.app.lightcurve.android]
+# Requires Android Studio + JDK 17 (Briefcase can install JDK automatically).
+# Emulator:  briefcase run android
+# Device:    briefcase run android -d "Samsung Galaxy S24"
+# Play Store:briefcase package android  → .aab (Android App Bundle)
+#            briefcase package android --packaging-format apk  → .apk
+requires = []
+base_theme = "Theme.MaterialComponents.Light.DarkActionBar"
+build_gradle_dependencies = [
+    "com.google.android.material:material:1.11.0",
+]
