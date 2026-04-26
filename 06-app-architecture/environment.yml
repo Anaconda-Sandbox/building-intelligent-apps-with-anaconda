@@ -10,6 +10,7 @@ dependencies:
   - pydantic>=2.0
   - pyarrow>=14.0
   - metaflow>=2.18
+  - duckdb>=0.10      # embedded vector store for agent memory
   - pytest>=8.0      # for running evals/assertions.py as tests
   - pip
   - pip:

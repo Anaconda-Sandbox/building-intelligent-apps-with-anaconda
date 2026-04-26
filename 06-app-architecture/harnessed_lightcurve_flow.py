@@ -117,7 +117,33 @@ class HarnessedLightcurveFlow(FlowSpec):
         import os, sys
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
         from agents.analysis_agent import run_analysis_agent
-        self.result = run_analysis_agent(report=self.report, verbose=False)
+        from vectordb.memory_store import AgentMemoryStore
+
+        # ── Retrieve relevant past runs from memory ───────────────────────────
+        # On the first ever run the store is empty and context is "".
+        report_summary = {
+            "flux_std":    self.report.flux_std,
+            "n_anomalies": getattr(self.report, "n_anomalies", 0),
+            "phase_span":  self.report.phase_range[1] - self.report.phase_range[0],
+        }
+        store = AgentMemoryStore()
+        placeholder = {"classification": "", "confidence": 0.0, "transit_depth_pct": 0.0}
+        similar = store.retrieve_similar(
+            placeholder, report_summary, k=3, exclude_target=self.input,
+        )
+        memory_context = store.format_context(similar)
+
+        # ── Run the agent, injecting memory context into the prompt ──────────
+        self.result = run_analysis_agent(
+            report=self.report,
+            memory_context=memory_context,
+            verbose=False,
+        )
+
+        # ── Store this result for future runs ─────────────────────────────────
+        store.add(target=self.input, result=self.result, report_summary=report_summary)
+        store.close()
+        self.memory_context_used = memory_context
         self.next(self.evaluate)
 
     # ── Step 4: Eval-as-CI with @card ─────────────────────────────────────────
