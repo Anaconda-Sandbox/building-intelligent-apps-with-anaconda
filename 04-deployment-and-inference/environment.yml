@@ -1,0 +1,19 @@
+name: deployment-inference
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - polars>=1.0
+  - pydantic>=2.0
+  - numpy>=1.26
+  - jupyter>=1.0
+  - ipykernel
+  - pip
+  - pip:
+    # OpenAI-compatible client — works with AI Navigator, vLLM, and Anaconda Platform
+    - openai>=1.30
+    # Anthropic client — for Claude Haiku fallback (used in Module 03)
+    - anthropic>=0.40
+    # LangGraph — agent framework from Module 03
+    - langgraph>=0.2
