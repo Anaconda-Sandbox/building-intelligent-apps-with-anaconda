@@ -1,0 +1,18 @@
+name: app-architecture
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - polars>=1.0
+  - numpy>=1.26
+  - scikit-learn>=1.4
+  - pydantic>=2.0
+  - pyarrow>=14.0
+  - metaflow>=2.18
+  - pytest>=8.0      # for running evals/assertions.py as tests
+  - pip
+  - pip:
+    - openai>=1.30
+    - anthropic>=0.40
+    - langgraph>=0.2
