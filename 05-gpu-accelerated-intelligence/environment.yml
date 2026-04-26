@@ -1,0 +1,32 @@
+name: gpu-intelligence
+channels:
+  - conda-forge
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.11
+  - polars>=1.0
+  - numpy>=1.26
+  - scikit-learn>=1.4
+  - pydantic>=2.0
+  - matplotlib>=3.8
+  - pyarrow>=14.0
+  - metaflow>=2.18
+  - langgraph>=0.2
+  # CUDA Python 1.0 — direct CUDA kernel access from Python
+  # Available via conda-forge and nvidia channels
+  - cuda-python>=12.0
+  # vLLM dependencies (GPU serving)
+  - pip
+  - pip:
+    # vLLM — OpenAI-compatible inference server for Nemotron
+    - vllm>=0.4.0
+    # OpenAI client — same interface whether pointing at vLLM or NIM
+    - openai>=1.30
+    # HuggingFace for model downloads
+    - huggingface-hub>=0.23
+    - transformers>=4.40
+    # Anthropic client (fallback for non-GPU environments)
+    - anthropic>=0.40
+    # Testing
+    - pytest>=8.0
