@@ -45,42 +45,35 @@ def build_agent_context_tool(filepath: str) -> str:
     return json.dumps(build_agent_context(filepath), indent=2)
 
 
-def build_graph(llm: Any) -> Any:
-    try:
-        from langchain.graphs import Graph
-        from langchain.tools import Tool
-    except ImportError as exc:
-        raise ImportError(
-            "LangChain with LangGraph support is required. "
-            "Install it with `pip install langchain` and the appropriate LangGraph extras."
-        ) from exc
+def build_graph(llm):
+    from langgraph.prebuilt import create_react_agent
+    from langchain_core.tools import tool
 
-    tools = [
-        Tool.from_function(
-            func=load_lightcurve_tool,
-            name="load_lightcurve",
-            description="Load a WASP-18 lightcurve CSV with schema enforcement.",
-        ),
-        Tool.from_function(
-            func=validate_lightcurve_tool,
-            name="validate_lightcurve",
-            description="Validate a loaded lightcurve and return a structured JSON report.",
-        ),
-        Tool.from_function(
-            func=feature_anomaly_tool,
-            name="feature_anomaly_pipeline",
-            description="Run feature engineering and anomaly detection on a light curve.",
-        ),
-        Tool.from_function(
-            func=build_agent_context_tool,
-            name="build_agent_context",
-            description="Build the JSON-ready context for the agent.",
-        ),
-    ]
+    @tool
+    def load_lightcurve_tool(filepath: str) -> str:
+        """Load a WASP-18 lightcurve CSV with schema enforcement."""
+        df = load_lightcurve(Path(filepath), SCHEMA)
+        return f"Loaded {len(df)} rows from {filepath}."
 
-    if hasattr(Graph, "from_tools"):
-        return Graph.from_tools(tools, llm=llm)
-    return Graph(llm=llm, tools=tools)
+    @tool
+    def validate_lightcurve_tool(filepath: str) -> str:
+        """Validate a loaded lightcurve and return a structured JSON report."""
+        df = load_lightcurve(Path(filepath), SCHEMA)
+        report = validate_lightcurve(df)
+        return json.dumps(report.model_dump(), indent=2)
+
+    @tool
+    def feature_anomaly_tool(filepath: str) -> str:
+        """Run feature engineering and anomaly detection on a light curve."""
+        df = load_lightcurve(Path(filepath), SCHEMA)
+        pipeline = run_feature_anomaly_pipeline(df)
+        return json.dumps({
+            "transit_window": pipeline["transit_window"],
+            "transit_depth": pipeline["transit_depth"],
+            "n_anomalous_points": pipeline["anomaly_summary"]["n_anomalous_points"],
+        }, indent=2)
+
+    return create_react_agent(llm, [load_lightcurve_tool, validate_lightcurve_tool, feature_anomaly_tool])
 
 
 def main() -> None:

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
-from typing import Any
 
 from agent_tools import (
     SCHEMA,
@@ -12,21 +12,35 @@ from agent_tools import (
     validate_lightcurve,
 )
 
+DATA_PATH = "../01-data-sources/wasp18b_lightcurve.csv"
 
+
+# ── Tools ─────────────────────────────────────────────────────────────────────
+# Docstrings are the tool descriptions the LLM sees — write for the model.
+
+@tool
 def load_lightcurve_tool(filepath: str) -> str:
+    """Load a WASP-18 lightcurve CSV and return row count confirmation.
+    Use this first before any validation or analysis."""
     df = load_lightcurve(Path(filepath), SCHEMA)
     return f"Loaded {len(df)} rows from {filepath}."
 
 
+@tool
 def validate_lightcurve_tool(filepath: str) -> str:
+    """Validate a WASP-18 lightcurve CSV and return a structured JSON report.
+    Checks for nulls, phase range, flux statistics, and schema conformance."""
     df = load_lightcurve(Path(filepath), SCHEMA)
     report = validate_lightcurve(df)
     return json.dumps(report.model_dump(), indent=2)
 
 
-def feature_anomaly_tool(filepath: str, window: int = 15, contamination: float = 0.05) -> str:
+@tool
+def feature_anomaly_tool(filepath: str) -> str:
+    """Run feature engineering and IsolationForest anomaly detection on a lightcurve.
+    Returns transit window, transit depth, and anomalous point count."""
     df = load_lightcurve(Path(filepath), SCHEMA)
-    pipeline = run_feature_anomaly_pipeline(df, window=window, contamination=contamination)
+    pipeline = run_feature_anomaly_pipeline(df, window=15, contamination=0.05)
     return json.dumps(
         {
             "transit_window": pipeline["transit_window"],
@@ -37,59 +51,66 @@ def feature_anomaly_tool(filepath: str, window: int = 15, contamination: float =
     )
 
 
+@tool
 def build_context_tool(filepath: str) -> str:
+    """Build the full JSON agent context for a lightcurve file.
+    Combines validation report, feature summary, and anomaly results
+    into a single structured payload ready for downstream reasoning."""
     context = build_agent_context(filepath)
     return json.dumps(context, indent=2)
 
 
+# ── LLM ───────────────────────────────────────────────────────────────────────
+# Defaults to AI Navigator (local, no API key needed).
+# Override via environment variables to point at any OpenAI-compatible endpoint.
+
+def build_llm() -> ChatOpenAI:
+    return ChatOpenAI(
+        model=os.environ.get("INFERENCE_MODEL", "default"),
+        base_url=os.environ.get("INFERENCE_BASE_URL", "http://localhost:8080/v1"),
+        api_key=os.environ.get("INFERENCE_API_KEY", "not-needed"),
+        temperature=0,
+    )
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
 def main() -> None:
-    try:
-        from langchain.chat_models import ChatOpenAI
-        from langchain.agents import AgentType, initialize_agent
-        from langchain.tools import Tool
-    except ImportError as exc:
-        raise ImportError(
-            "LangChain is required to run this example. Install it with `pip install langchain` "
-            "and any optional LLM backend you prefer."
-        ) from exc
-
-    tools = [
-        Tool.from_function(
-            func=load_lightcurve_tool,
-            name="load_lightcurve",
-            description="Load a local WASP-18 lightcurve CSV with strict schema enforcement.",
-        ),
-        Tool.from_function(
-            func=validate_lightcurve_tool,
-            name="validate_lightcurve",
-            description="Validate a loaded lightcurve and return a structured JSON validation report.",
-        ),
-        Tool.from_function(
-            func=feature_anomaly_tool,
-            name="feature_anomaly_pipeline",
-            description="Run the feature engineering and anomaly detection pipeline and return a summary.",
-        ),
-        Tool.from_function(
-            func=build_context_tool,
-            name="build_agent_context",
-            description="Build the JSON-ready agent context for a given lightcurve file.",
-        ),
-    ]
-
-    llm = ChatOpenAI(temperature=0)
-    agent = initialize_agent(
-        tools,
+    from langchain_openai import ChatOpenAI
+    from langchain_core.tools import tool
+    from langgraph.prebuilt import create_react_agent
+    llm = build_llm()
+    agent = create_react_agent(
         llm,
-        agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-        verbose=True,
+        [load_lightcurve_tool, validate_lightcurve_tool, feature_anomaly_tool, build_context_tool],
     )
 
     prompt = (
-        "You are an intelligent data analyst. Use the available tools to load the WASP-18 light curve, "
-        "validate its quality, run anomaly detection, and summarize the transit signal in plain language."
+        f"You are an intelligent data analyst. The lightcurve file is at: {DATA_PATH}\n\n"
+        "Use the available tools to:\n"
+        "1. Load the WASP-18 lightcurve\n"
+        "2. Validate its quality\n"
+        "3. Run anomaly detection\n"
+        "4. Summarize the transit signal in plain language"
     )
-    result = agent.run(prompt)
-    print(result)
+
+    result = agent.invoke({"messages": [{"role": "user", "content": prompt}]})
+
+    # Print the reasoning trace (tool calls + intermediate steps)
+    print("\n── Agent reasoning trace ─────────────────────────────────────────\n")
+    for msg in result["messages"]:
+        role = getattr(msg, "type", type(msg).__name__)
+        content = getattr(msg, "content", "")
+        tool_calls = getattr(msg, "tool_calls", [])
+        if tool_calls:
+            for tc in tool_calls:
+                print(f"[{role}] → tool call: {tc['name']}({tc['args']})")
+        elif content:
+            print(f"[{role}] {content}")
+
+    # Final answer is the last message
+    print("\n── Final answer ──────────────────────────────────────────────────\n")
+    print(result["messages"][-1].content)
 
 
 if __name__ == "__main__":
