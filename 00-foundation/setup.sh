@@ -58,18 +58,18 @@ check_conda_installed() {
 
 check_environment_active() {
     if [ -z "$CONDA_DEFAULT_ENV" ]; then
-        print_error "No conda environment is active. Please run: conda activate data-foundations"
+        print_error "No conda environment is active. Please run: conda activate foundation"
         exit 1
     fi
     
-    if [ "$CONDA_DEFAULT_ENV" != "data-foundations" ]; then
-        print_warning "Expected environment 'data-foundations' but found '$CONDA_DEFAULT_ENV'"
+    if [ "$CONDA_DEFAULT_ENV" != "foundation" ]; then
+        print_warning "Expected environment 'foundation' but found '$CONDA_DEFAULT_ENV'"
         print_info "Attempting to activate the correct environment..."
         # Note: This won't work in a script, so we just warn
         exit 1
     fi
     
-    print_success "Environment 'data-foundations' is active"
+    print_success "Environment 'foundation' is active"
 }
 
 ###############################################################################
@@ -234,7 +234,7 @@ display_summary() {
     echo -e "${GREEN}Your Data Foundations environment is ready!${NC}\n"
     
     echo -e "${BLUE}Environment Details:${NC}"
-    echo "  Environment Name: data-foundations"
+    echo "  Environment Name: foundations"
     echo "  Python Version: $(python --version 2>&1)"
     echo "  Conda Prefix: $CONDA_PREFIX"
     echo ""

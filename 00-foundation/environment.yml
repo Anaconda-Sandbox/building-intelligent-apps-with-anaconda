@@ -1,6 +1,8 @@
-name: data-foundations
+name: foundation
 channels:
   - main
+  - main-x  # New channel for pure wheels packages
+  - community  # New channel for community-maintained packages
   - conda-forge
 dependencies:
   # Core Python

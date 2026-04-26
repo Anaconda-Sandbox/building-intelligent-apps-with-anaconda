@@ -41,7 +41,7 @@ This will:
 ### Step 2: Activate the Environment
 
 ```bash
-conda activate data-foundations
+conda activate foundation
 ```
 
 ### Step 3: Run the Setup Script
@@ -185,7 +185,7 @@ To remove the environment:
 conda deactivate
 
 # Remove the environment
-conda env remove --name data-foundations
+conda env remove --name foundation
 
 # (Optional) Remove the channels and revert solver
 conda config --remove channels https://github.com/conda-incubator/conda-pypi-test/releases/download
@@ -206,7 +206,7 @@ After completing this foundation setup, you'll be ready for:
 **Solution:** Ensure `conda-rattler-solver` is installed and run `conda config --set solver rattler`
 
 ### Issue: ModuleNotFoundError for LangChain or LlamaIndex
-**Solution:** Verify the environment is activated: `conda activate data-foundations`
+**Solution:** Verify the environment is activated: `conda activate foundation`
 
 ### Issue: MCP command not found
 **Solution:** Reinstall the mcp package: `conda install mcp -y`
