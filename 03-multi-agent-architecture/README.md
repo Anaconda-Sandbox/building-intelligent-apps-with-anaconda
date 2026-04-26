@@ -8,6 +8,17 @@ This module introduces a higher-level architecture:
 - **MetaFlow** for workflow versioning, reproducibility, and model lifecycle tracking
 - **promptfoo** for prompt quality and model response evaluation
 
+┌─────────────────────────────────────────────────────┐
+│          METAFLOW (infrastructure layer)            │
+│  deployment · state · versioning · compute · data   │
+│                                                     │
+│   ┌──────────────────────────────────────────────┐  │
+│   │         LANGGRAPH (agent loop layer)         │  │
+│   │  graph state · tool calling · conditionals   │  │
+│   │  memory · streaming · human-in-the-loop      │  │
+│   └──────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────┘
+
 ## Why LangGraph?
 
 LangGraph is designed for stateful, multi-step agent orchestration. It is a natural fit when your system has:
