@@ -8,7 +8,7 @@ A hands-on curriculum for building production-grade intelligent applications in 
 
 ## The story
 
-Data is the foundation. A clean pipeline becomes an agent tool. Multiple agents need coordination. Coordination at scale needs infrastructure. That infrastructure needs to be secure and reproducible. Anaconda owns that entire stack.
+Data is the foundation. A clean pipeline becomes an agent tool. Multiple agents need coordination. Coordination at scale needs infrastructure. That infrastructure needs to be secure and reproducible. Anaconda can help you with that entire stack.
 
 ```
 -1  MCP orientation          what MCP is and why it matters
