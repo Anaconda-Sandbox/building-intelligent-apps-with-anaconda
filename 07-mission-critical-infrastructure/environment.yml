@@ -1,0 +1,14 @@
+name: mission-critical
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - conda-lock>=2.5       # reproducible cross-platform lock files
+  - conda-pack>=0.7       # portable environment tarballs for air-gap deployment
+  - metaflow>=2.18
+  - pydantic>=2.0
+  - pip
+  - pip:
+    - openai>=1.30
+    - anthropic>=0.40

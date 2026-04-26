@@ -1,0 +1,85 @@
+# security/mirror.yaml
+#
+# Anaconda Platform — Channel Mirror Reference
+#
+# Documents the mirror setup for the ai-pipeline-production channel.
+# Created via Anaconda Platform UI: Channels → [channel] → Create Mirror
+# Or via anaconda-repo CLI.
+#
+# Anaconda recommends passive mirroring to avoid downloading the entire
+# repository upfront. Packages are fetched on first conda install request.
+#
+# Channel sizes (Anaconda docs):
+#   Anaconda main:   ~700GB
+#   conda-forge:     ~3TB
+#   PyPI:            ~10TB  ← use allowlist, never mirror in full
+#
+# Docs: https://anaconda.com/docs/anaconda-platform/self-hosted/latest/user/mirrors
+
+mirrors:
+
+  # ── Primary conda channel ──────────────────────────────────────────────────
+  - name: "main-conda-passive"
+    channel: "ai-pipeline-production"
+    type: conda                             # mirrors .conda and .tar.bz2 packages
+    mode: passive                           # recommended: fetch on demand
+    source_url: "https://repo.anaconda.cloud/pkgs/main"
+    frequency: "0 2 * * 0"                 # weekly, Sunday 02:00 UTC
+    policy: "ai-pipeline-production"        # CVE + license + platform filter
+    run_now: false
+
+  # ── conda-forge (token-authenticated) ────────────────────────────────────
+  # Replace <TOKEN> and <ORG_ID> with values from your Anaconda Platform account
+  - name: "conda-forge-passive"
+    channel: "ai-pipeline-production"
+    type: conda
+    mode: passive
+    source_url: "https://repo.anaconda.cloud/t/<TOKEN>/repo/conda-forge"
+    frequency: "0 3 * * 0"                 # weekly, offset from main to avoid collision
+    policy: "ai-pipeline-production"
+    run_now: false
+
+  # ── PyPI mirror (allowlist only) ──────────────────────────────────────────
+  # Policy filters don't apply to PyPI mirrors — use mirroring_filters instead.
+  # Full PyPI is ~10TB. Mirror only packages the pipeline actually needs.
+  # Docs: mirror once yearly for full PyPI; selective for allowlist approach.
+  - name: "pypi-inference-stack"
+    channel: "ai-pipeline-production-pypi"
+    type: std_python                        # mirrors .whl and .tar.gz
+    mode: passive
+    source_url: "https://pypi.org"
+    frequency: "0 4 1 * *"                 # monthly — allowlist changes rarely
+    run_now: false
+    mirroring_filters:
+      # The PyPI packages needed for the inference stack from Module 04/05.
+      # conda-pypi (experimental) is the long-term answer for integrating
+      # these into the conda supply chain. Until then, mirror them explicitly.
+      include:
+        - openai
+        - anthropic
+        - langgraph
+        - langchain-core
+        - vllm
+        - huggingface-hub
+        - transformers
+        - duckdb
+      exclude: []
+
+# ── Air-gap notes ─────────────────────────────────────────────────────────────
+#
+# For truly air-gapped environments (no outbound internet at all):
+#
+# 1. Run the mirrors on a connected machine first.
+#    Anaconda Platform stores mirrored packages locally on the Platform server.
+#
+# 2. CVE updates: air-gapped Platform installations update CVEs daily
+#    and packages monthly (per Anaconda docs). The CVE channel syncs from
+#    https://api.anaconda.cloud during the install, then auto-updates
+#    at the configured interval.
+#
+# 3. For fully disconnected nodes (no Platform access), use conda-pack:
+#    conda-pack -n app-architecture -o app-architecture.tar.gz
+#    Ship the tarball. See scripts/pack_and_ship.sh.
+#
+# 4. For DuckDB memory store from Module 06, include the .duckdb file
+#    in the same shipment as the conda-pack tarball.

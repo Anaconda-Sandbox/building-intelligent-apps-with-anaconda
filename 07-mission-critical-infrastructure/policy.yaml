@@ -1,0 +1,112 @@
+# security/policy.yaml
+#
+# Anaconda Platform — Channel Policy Reference
+#
+# This file documents the policy Anaconda recommends for production AI/ML channels.
+# Policies are created via the Anaconda Platform UI (Policies → Create Policy)
+# or via the anaconda-repo CLI. This file serves as a human-readable record
+# of what the policy enforces — commit it alongside your environment.yml.
+#
+# Anaconda Platform 7.0.0 (early access). Contact your TAM for access.
+# Docs: https://anaconda.com/docs/anaconda-platform/self-hosted/latest/user/policies
+
+policy:
+  name: "ai-pipeline-production"
+  description: >
+    Production policy for the AI pipeline channel.
+    Blocks packages with active/exploitable CVEs.
+    Restricts to supported platforms.
+    Requires Anaconda-signed packages only.
+    Enforces OSI-approved and permissive licenses.
+
+  # ── Package Rules ─────────────────────────────────────────────────────────
+  package_rules:
+
+    # Only mirror packages for these platforms.
+    # noarch packages are automatically included alongside platform-specific ones.
+    platform:
+      operator: "in"
+      values:
+        - linux-64
+        - linux-aarch64   # ARM — for edge/embedded deployment
+        - osx-arm64       # developer machines
+
+    # Only allow OSI-approved and permissive licenses.
+    # Blocks GPL-3.0 and similar copyleft for commercial deployment.
+    license:
+      operator: "in"
+      values:
+        - MIT
+        - BSD
+        - BSD-2-Clause
+        - BSD-3-Clause
+        - Apache-2.0
+        - ISC
+        - PSF
+        - Python-2.0
+
+    # Require Anaconda signature on every package.
+    # Unsigned packages from community channels are excluded.
+    only_signed_packages: true
+
+    # Include .tar.bz2 alongside .conda for air-gap compatibility.
+    # Costs ~2x storage but ensures older conda clients can install.
+    legacy_packages: false
+
+  # ── CVE Rules ─────────────────────────────────────────────────────────────
+  # Anaconda pulls CVE data from NVD/NIST, updated every 4 hours on Platform.
+  # Air-gapped installations update CVEs daily.
+  #
+  # Recommended default from Anaconda docs:
+  #   "CVE Score less than 7" OR "CVE Status in (mitigated, cleared)"
+  #
+  # This means:
+  #   - A package with CVE score 9.8 (Critical) is BLOCKED
+  #     unless Anaconda has marked it mitigated or cleared
+  #   - A package with CVE score 6.5 (Medium) is ALLOWED
+  #   - A package Anaconda has patched (mitigated) is ALLOWED
+  #     regardless of score
+
+  cve_rules:
+    operator: "or"
+    conditions:
+      - field: "cve_score"
+        operator: "less_than"
+        value: 7.0
+      - field: "cve_status"
+        operator: "in"
+        values:
+          - "mitigated"
+          - "cleared"
+
+  # CVEs on this allowlist are never used for filtering,
+  # even if they exceed the score threshold.
+  # Use for accepted-risk exceptions with documented justification.
+  cve_allowlist: []
+  # Example with justification comment:
+  # cve_allowlist:
+  #   - id: "CVE-2023-XXXXX"
+  #     justification: "Not exploitable in our deployment — no network exposure"
+  #     approved_by: "security-team@yourorg.com"
+  #     approved_date: "2026-04-25"
+
+  # ── Exclusions ─────────────────────────────────────────────────────────────
+  # Packages blocked regardless of CVE status or license.
+  exclude_packages: []
+
+  # Packages that override exclude_packages (exceptions to exclusions).
+  exclusion_exceptions: []
+
+# ── Mirror Configuration ────────────────────────────────────────────────────
+# This policy is applied to the channel mirror, not the channel directly.
+# Mirror policies override channel policies (per Anaconda docs).
+#
+# Recommended mirror setup for this policy:
+#   Mode:      Passive (packages download on first request)
+#   Source:    https://repo.anaconda.cloud/pkgs/main
+#              https://repo.anaconda.cloud/conda-forge  (via token)
+#   Frequency: Weekly (0 2 * * 0) — every Sunday at 02:00 UTC
+#              Anaconda recommends no more frequent than Daily to avoid
+#              mirror collisions. Air-gap updates: CVEs daily, packages monthly.
+#
+# See mirror.yaml for the full mirror configuration.
