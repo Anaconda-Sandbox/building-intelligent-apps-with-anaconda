@@ -8,6 +8,7 @@ This module introduces a higher-level architecture:
 - **MetaFlow** for workflow versioning, reproducibility, and model lifecycle tracking
 - **promptfoo** for prompt quality and model response evaluation
 
+```bash
 ┌─────────────────────────────────────────────────────┐
 │          METAFLOW (infrastructure layer)            │
 │  deployment · state · versioning · compute · data   │
@@ -18,6 +19,7 @@ This module introduces a higher-level architecture:
 │   │  memory · streaming · human-in-the-loop      │  │
 │   └──────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────┘
+```
 
 ## Why LangGraph?
 
