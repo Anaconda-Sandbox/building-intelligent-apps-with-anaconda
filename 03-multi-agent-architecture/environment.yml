@@ -1,0 +1,16 @@
+name: first-agent
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - polars
+  - scikit-learn
+  - pydantic>=2.0
+  - python-dotenv
+  - pip:
+    - langchain-openai
+    - langchain-core
+    - langgraph>=0.2
