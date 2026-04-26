@@ -19,6 +19,16 @@ dependencies:
   # vLLM dependencies (GPU serving)
   - pip
   - pip:
+    - pip:
+    # vLLM and these GPU inference packages exist only on PyPI —
+    # they move faster than conda-forge packaging can keep up.
+    # This pip section is the current pragmatic approach.
+    #
+    # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+    #   conda pypi install vllm openai
+    # It converts wheels to .conda format and respects conda's solver.
+    # Watch: https://conda.org/blog/conda-roadmap-q1-2026/
+    
     # vLLM — OpenAI-compatible inference server for Nemotron
     - vllm>=0.4.0
     # OpenAI client — same interface whether pointing at vLLM or NIM
