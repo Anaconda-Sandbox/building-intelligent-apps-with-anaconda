@@ -1,9 +1,12 @@
 name: foundation
 channels:
   - main
-  - main-x  # New channel for pure wheels packages
-  - community  # New channel for community-maintained packages
+  # - main-x  # New channel for pure wheels packages
+  # - community  # New channel for community-maintained packages
   - conda-forge
+# platforms: # TODO: Fix - this is incorrect syntax
+#   - linux-64
+#   - osx-arm64
 dependencies:
   # Core Python
   - python>=3.10
@@ -13,9 +16,9 @@ dependencies:
   - conda-rattler-solver  # Required for wheel installation with conda-pypi
 
   # Package management and lock files
-  - conda-lock>=2.17.0
+  - conda-lock
   - pipdeptree
-  - anaconda-cli
+  # - anaconda-cli
 
   # Development and utilities
   - pip
@@ -43,7 +46,6 @@ dependencies:
 
   # MCP (Model Context Protocol)
   - mcp
-  - mcp-servers
   - fastmcp
 
   # Agent & Workflow Frameworks

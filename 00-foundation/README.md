@@ -14,7 +14,9 @@ Welcome to the Foundation demo! This section sets up a complete environment for 
 
 ## 📋 Prerequisites
 
-- Conda or Miniconda installed ([download here](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html))
+- Conda with Anaconda Ditro or Miniconda Distro 
+    - Wizard download: ([Miniconda download here](https://www.anaconda.com/docs/getting-started/miniconda/install/overview)) | ([Anaonda download here](https://www.anaconda.com/docs/getting-started/miniconda/install/overview))
+    - Jump to [Installing Conda](#installing-conda-from-the-command-linetalling Conda from the Command Line)
 - ~2GB disk space for dependencies
 - Python 3.10+
 
@@ -27,16 +29,19 @@ Welcome to the Foundation demo! This section sets up a complete environment for 
 cd 00-foundation
 
 # Create the conda environment from the environment.yml file
+conda init
 conda env create --file environment.yml
 ```
 
 This will:
 - Install Python 3.10+
 - Install LLM frameworks (LangChain, LlamaIndex, LangGraph)
-- Set up MCP ecosystem (mcp, fastmcp, mcp-servers)
+- Set up MCP ecosystem (mcp, fastmcp)
 - Configure conda-pypi for PyPI wheel support
 - Install database and async utilities
 - Enable the Anaconda CLI tools
+
+If you're starting from an [Anaconda Cloud notebook](https://nb.anaconda.com), you can use [Quick Start Environments](https://www.anaconda.com/products/navigator/quick-start-environments).
 
 ### Step 2: Activate the Environment
 
@@ -213,6 +218,40 @@ After completing this foundation setup, you'll be ready for:
 
 ### Issue: pgvector not installing
 **Solution:** pgvector requires PostgreSQL dev headers. Install with: `conda install libpq -y`
+
+## Installing Conda from the Command Line
+### Linux & [macOS](https://docs.conda.io/projects/conda/en/stable/user-guide/install/macos.html) (Terminal): 
+The process for Linux and macOS is nearly identical. You download a .sh shell script and run it using bash. 
+
+- **Download:** Use curl or wget to fetch the installer for your architecture (e.g., x86_64 for Intel or arm64 for Apple Silicon).
+- **Run Installer:** Execute the script using bash. Use the -b flag for a "batch" install to skip interactive prompts.
+- **Initialize:** Run conda init to set up your shell. 
+
+```bash
+# Example for macOS Apple Silicon (M1/M2/M3)
+curl -O https://anaconda.com
+bash Miniconda3-latest-MacOSX-arm64.sh -b -p $HOME/miniconda
+source ~/miniconda/bin/activate
+conda init zsh
+```
+### Windows (PowerShell)
+While Windows often uses a graphical .exe, you can perform a "silent" command-line installation using PowerShell. 
+
+- **Download:** Use Invoke-WebRequest to download the .exe installer.
+- **Silent Install:** Run the installer with the /S flag. You must specify the destination path with /D=.
+- **Initialize:** After installation, you may need to update the PowerShell Execution Policy to allow Conda scripts to run. 
+
+```powershell
+# Download and install silently
+Invoke-WebRequest -Uri "https://anaconda.com" -OutFile "miniconda.exe"
+Start-Process -FilePath .\miniconda.exe -ArgumentList "/S", "/D=$Env:UserProfile\Miniconda3" -Wait
+
+# Initialize PowerShell (Run as Administrator if needed)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+& "$Env:UserProfile\Miniconda3\Scripts\conda.exe" init powershell
+```
+### After Installation
+After installation, restart your terminal or run `source ~/.bashrc` (Linux) or `source ~/.zshrc` (Mac) to finalize the setup. You can verify the installation by running `conda --version`.
 
 ## 📖 Resources
 
