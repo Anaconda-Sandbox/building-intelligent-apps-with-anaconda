@@ -4,9 +4,6 @@
 [submodule "100-example-applications/polars_demo"]
 	path = 100-example-applications/polars_demo
 	url = git@github.com:dbouquin/polars_demo.git
-[submodule "anaconda-mcp-claude-desktop-demo"]
-	path = anaconda-mcp-claude-desktop-demo
-	url = https://github.com/Anaconda-Labs/anaconda-mcp-claude-desktop-demo.git
 [submodule "_00-mcp-your-environment/anaconda-mcp-claude-desktop-demo"]
 	path = _00-mcp-your-environment/anaconda-mcp-claude-desktop-demo
 	url = https://github.com/Anaconda-Labs/anaconda-mcp-claude-desktop-demo.git
