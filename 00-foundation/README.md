@@ -226,7 +226,7 @@ After completing this foundation setup, you'll be ready for:
 ### Issue: pgvector not installing
 **Solution:** pgvector requires PostgreSQL dev headers. Install with: `conda install libpq -y`
 
-## Installing Conda from the Command Line
+## Installing Miniconda from the Command Line
 ### Linux & [macOS](https://docs.conda.io/projects/conda/en/stable/user-guide/install/macos.html) (Terminal): 
 The process for Linux and macOS is nearly identical. You download a .sh shell script and run it using bash. 
 
@@ -235,12 +235,19 @@ The process for Linux and macOS is nearly identical. You download a .sh shell sc
 - **Initialize:** Run conda init to set up your shell. 
 
 ```bash
-# Example for macOS Apple Silicon (M1/M2/M3)
-curl -O https://anaconda.com
-bash Miniconda3-latest-MacOSX-arm64.sh -b -p $HOME/miniconda
-source ~/miniconda/bin/activate
-conda init zsh
+# Example for Linux and Mac
+# Replace url for macOS Apple Silicon: https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+# Replace url for macOS Intel: https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+# Download the installer
+curl -sL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > Miniconda3.sh
+# Run the installer
+bash Miniconda3.sh
+# Respond to terms of service and auto activate base
+# Initialization targets are listed in the final step of install
+source /home/codespace/miniconda3/bin/activate
+conda init
 ```
+
 ### Windows (PowerShell)
 While Windows often uses a graphical .exe, you can perform a "silent" command-line installation using PowerShell. 
 

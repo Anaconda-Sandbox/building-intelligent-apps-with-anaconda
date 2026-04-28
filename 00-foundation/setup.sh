@@ -56,6 +56,14 @@ check_conda_installed() {
     print_success "conda is installed"
 }
 
+check_anaconda_installed() {
+    if ! command -v anaconda &> /dev/null; then
+        print_error "anaconda cli not found. Please install Miniconda or Anaconda first."
+        exit 1
+    fi
+    print_success "anaconda is installed"
+}
+
 check_environment_active() {
     if [ -z "$CONDA_DEFAULT_ENV" ]; then
         print_error "No conda environment is active. Please run: conda activate foundation"
@@ -275,6 +283,7 @@ main() {
     # Pre-flight checks
     print_info "Running pre-flight checks..."
     check_conda_installed
+    # check_anaconda_installed
     check_environment_active
     
     # Execute setup steps
