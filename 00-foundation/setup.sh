@@ -72,7 +72,7 @@ check_environment_active() {
     
     if [ "$CONDA_DEFAULT_ENV" != "foundation" ]; then
         print_warning "Expected environment 'foundation' but found '$CONDA_DEFAULT_ENV'"
-        print_info "Attempting to activate the correct environment..."
+        print_info "Activate the correct environment with 'conda activate foundation'..."
         # Note: This won't work in a script, so we just warn
         exit 1
     fi
@@ -283,7 +283,7 @@ main() {
     # Pre-flight checks
     print_info "Running pre-flight checks..."
     check_conda_installed
-    # check_anaconda_installed
+    check_anaconda_installed
     check_environment_active
     
     # Execute setup steps

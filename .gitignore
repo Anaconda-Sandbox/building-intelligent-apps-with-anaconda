@@ -11,3 +11,4 @@ build/
 *.ipynb_checkpoints
 .env/
 Miniconda3.sh
+=*
