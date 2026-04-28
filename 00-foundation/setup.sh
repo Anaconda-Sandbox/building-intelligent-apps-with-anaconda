@@ -141,6 +141,9 @@ setup_environment_variables() {
     ACTIVATE_DIR="$CONDA_PREFIX/etc/conda/activate.d"
     DEACTIVATE_DIR="$CONDA_PREFIX/etc/conda/deactivate.d"
     
+    print_info "Installing experimental Anaconda CLI..."
+    curl -fsSL https://anaconda.sh/install.sh | sh
+
     mkdir -p "$ACTIVATE_DIR"
     mkdir -p "$DEACTIVATE_DIR"
     

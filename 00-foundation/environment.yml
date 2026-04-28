@@ -4,19 +4,12 @@ channels:
   # - main-x  # New channel for pure wheels packages
   # - community  # New channel for community-maintained packages
   - conda-forge
-# platforms: # TODO: Fix - this is incorrect syntax
-#   - linux-64
-#   - osx-arm64
 dependencies:
   # Core Python
   - python>=3.10
 
-  # conda-pypi ecosystem
-  - conda-pypi>=0.8.0
-  - conda-rattler-solver  # Required for wheel installation with conda-pypi
-
   # Package management and lock files
-  - conda-lock
+  - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
   - pipdeptree
   # - anaconda-cli
 
@@ -34,6 +27,7 @@ dependencies:
   # Data handling
   - msgpack-python
   - typing-extensions
+  # - ipykernel
 
   # Database support
   - anysqlite

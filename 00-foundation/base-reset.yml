@@ -1,0 +1,4 @@
+name: base
+dependencies:
+  - conda
+  - python>=3.10

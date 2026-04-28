@@ -28,6 +28,13 @@ Welcome to the Foundation demo! This section sets up a complete environment for 
 # Navigate to the foundation directory
 cd 00-foundation
 
+# Install experimental plugins in base
+# Learn more about conda-rattler-solver: https://github.com/conda-incubator/conda-rattler-solver 
+# Learn more about conda-pypi: https://github.com/conda-incubator/conda-pypi-test
+# Learn more about conda-workspaces: https://github.com/conda-incubator/conda-workspaces
+# Learn more about conda-lockfiles: https://github.com/conda-incubator/conda-lockfiles
+conda install -n base conda-rattler-solver conda-pypi>=0.8.0 conda-workspaces conda-lockfiles
+
 # Create the conda environment from the environment.yml file
 conda init
 conda env create --file environment.yml
