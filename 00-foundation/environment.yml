@@ -54,3 +54,7 @@ dependencies:
   # Async & HTTP utilities
   - aiohttp
   - python-dotenv
+
+  # Panel App
+  - panel
+  - panel-material-ui
