@@ -67,8 +67,12 @@ check_conda_installed() {
 }
 
 check_anaconda_installed() {
+    print_header "Step 6: Anaconda CLI Installation and Check"
     # Check the standard ana bootstrap location first, then fall back to PATH
     ANA_BIN="$HOME/.ana/bin/anaconda"
+
+    print_info "Installing experimental Anaconda CLI..."
+    curl -fsSL https://anaconda.sh/install.sh | sh
     
     if [ -f "$ANA_BIN" ] || command -v anaconda &> /dev/null; then
         print_success "anaconda cli is installed"
@@ -164,9 +168,6 @@ setup_environment_variables() {
     # Create activation script
     ACTIVATE_DIR="$CONDA_PREFIX/etc/conda/activate.d"
     DEACTIVATE_DIR="$CONDA_PREFIX/etc/conda/deactivate.d"
-    
-    print_info "Installing experimental Anaconda CLI..."
-    curl -fsSL https://anaconda.sh/install.sh | sh
 
     mkdir -p "$ACTIVATE_DIR"
     mkdir -p "$DEACTIVATE_DIR"
