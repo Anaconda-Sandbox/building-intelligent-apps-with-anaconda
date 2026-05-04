@@ -67,11 +67,17 @@ check_conda_installed() {
 }
 
 check_anaconda_installed() {
-    if ! command -v anaconda &> /dev/null; then
-        print_error "anaconda cli not found. Please install Miniconda or Anaconda first."
+    # Check the standard ana bootstrap location first, then fall back to PATH
+    ANA_BIN="$HOME/.ana/bin/anaconda"
+    
+    if [ -f "$ANA_BIN" ] || command -v anaconda &> /dev/null; then
+        print_success "anaconda cli is installed"
+    else
+        print_error "anaconda cli not found."
+        print_info "Install it with: curl -fsSL https://anaconda.com/ana/install.sh | sh"
+        print_info "Then run: ana bootstrap"
         exit 1
     fi
-    print_success "anaconda is installed"
 }
 
 check_environment_active() {
