@@ -16,7 +16,7 @@ Welcome to the Foundation demo! This section sets up a complete environment for 
 
 - Conda with Anaconda Ditro or Miniconda Distro 
     - Wizard download: ([Miniconda download here](https://www.anaconda.com/docs/getting-started/miniconda/install/overview)) | ([Anaonda download here](https://www.anaconda.com/docs/getting-started/miniconda/install/overview))
-    - Jump to [Installing Conda](#installing-conda-from-the-command-linetalling Conda from the Command Line)
+    - Jump to [Installing Conda from the command line](#installing-miniconda-from-the-command-line)
 - ~2GB disk space for dependencies
 - Python 3.10+
 
