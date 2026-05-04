@@ -30,11 +30,12 @@ cd 00-foundation
 
 # Accept Anaconda terms of service
 # Learn more about (Anaconda ToS - Explain Like I'm Five)[101-reference-library/terms-of-service-ELI5.md]
+conda init
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 
 # Update to the latest conda
-conda update -n base -c defaults "conda>=26.3.2"
+conda install -n base -c defaults "conda>=26.3.2" anaconda-anon-usage
 
 # Install experimental plugins in base
 # Learn more about conda-rattler-solver: https://github.com/conda-incubator/conda-rattler-solver 
@@ -42,10 +43,9 @@ conda update -n base -c defaults "conda>=26.3.2"
 # Learn more about conda-workspaces: https://github.com/conda-incubator/conda-workspaces
 # Learn more about conda-lockfiles: https://github.com/conda-incubator/conda-lockfiles
 
-conda install -n base conda-rattler-solver conda-pypi>=0.8.0 conda-workspaces conda-lockfiles
+conda install -n base conda-rattler-solver "conda-pypi>=0.8.0" conda-workspaces conda-lockfiles
 
 # Create the conda environment from the environment.yml file
-conda init
 conda env create --file environment.yml
 ```
 

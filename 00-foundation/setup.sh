@@ -43,6 +43,16 @@ print_warning() {
 print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
 }
+###############################################################################
+# Bash arrays
+###############################################################################
+
+for arg in "$@"; do
+    case $arg in
+        --conda) CONDA=true ;;
+        --anaconda) ANACONDA=true;;
+    esac
+done
 
 ###############################################################################
 # Verification Functions
@@ -287,11 +297,17 @@ main() {
     check_environment_active
     
     # Execute setup steps
-    configure_solver
-    configure_channels
-    create_directories
-    setup_environment_variables
-    verify_packages
+    if [ "$CONDA" = true]; then
+        configure_solver
+        configure_channels
+        create_directories
+        setup_environment_variables
+        verify_packages
+    fi
+
+    if [ "$ANACONDA" = true]; then
+        echo "Configuring Anaconda CLI..."
+    fi
     
     # Display summary
     display_summary
