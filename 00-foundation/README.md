@@ -7,8 +7,7 @@ Welcome to the Foundation demo! This section sets up a complete environment for 
 - Setting up a conda environment with modern Python package management
 - Configuring conda-pypi for PyPI wheel support
 - Initializing MCP (Model Context Protocol) servers
-- Working with LangChain, LlamaIndex, and LangGraph frameworks
-- Managing environment variables and configurations
+- Lastest features in conda ecosystem, built by Anaconda and others!
 
 **Estimated completion time: 5-7 minutes**
 
@@ -25,6 +24,9 @@ Welcome to the Foundation demo! This section sets up a complete environment for 
 ### Step 1: Create the Environment
 
 ```bash
+# Check youre using conda 26.3.2 if not the correct version, go to #installing-miniconda-from-the-command-line
+conda --version
+
 # Navigate to the foundation directory
 cd 00-foundation
 
@@ -43,7 +45,7 @@ conda install -n base -c defaults "conda>=26.3.2" anaconda-anon-usage
 # Learn more about conda-workspaces: https://github.com/conda-incubator/conda-workspaces
 # Learn more about conda-lockfiles: https://github.com/conda-incubator/conda-lockfiles
 
-conda install -n base conda-rattler-solver "conda-pypi>=0.8.0" conda-workspaces conda-lockfiles
+conda install -n base conda-rattler-solver "conda-pypi>=0.8.0" conda-workspaces conda-forge::conda-lockfiles
 
 # Create the conda environment from the environment.yml file
 conda env create --file environment.yml
@@ -52,10 +54,6 @@ conda env create --file environment.yml
 This will:
 - Install Python 3.10+
 - Install LLM frameworks (LangChain, LlamaIndex, LangGraph)
-- Set up MCP ecosystem (mcp, fastmcp)
-- Configure conda-pypi for PyPI wheel support
-- Install database and async utilities
-- Enable the Anaconda CLI tools
 
 If you're starting from an [Anaconda Cloud notebook](https://nb.anaconda.com), you can use [Quick Start Environments](https://www.anaconda.com/products/navigator/quick-start-environments).
 
@@ -71,15 +69,15 @@ conda activate foundation
 # Make the setup script executable (if needed)
 chmod +x setup.sh
 
-# Run the setup script
-bash setup.sh
+# Run the setup script with flags for conda experimental set up, try the new anaconda cli and try the new Anaconda MCP server
+bash setup.sh --conda --anaconda --mcp
 ```
 
 The setup script will:
+- ✅ Configure conda-pypi for PyPI wheel support
 - ✅ Configure conda to use the rattler solver for wheel installation
+- ✅ Enable the Anaconda CLI tools
 - ✅ Add the conda-pypi-test channel for PyPI wheel indexing
-- ✅ Create required directories for MCP configurations
-- ✅ Set environment variables for proper module discovery
 - ✅ Display verification information
 
 ## 📦 What's Installed

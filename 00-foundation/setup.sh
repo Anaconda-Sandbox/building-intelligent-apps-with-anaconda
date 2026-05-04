@@ -50,7 +50,7 @@ print_info() {
 for arg in "$@"; do
     case $arg in
         --conda) CONDA=true ;;
-        --anaconda) ANACONDA=true;;
+        --anaconda) ANACONDA=true ;;
     esac
 done
 
@@ -293,11 +293,10 @@ main() {
     # Pre-flight checks
     print_info "Running pre-flight checks..."
     check_conda_installed
-    check_anaconda_installed
     check_environment_active
     
     # Execute setup steps
-    if [ "$CONDA" = true]; then
+    if [ "$CONDA" = true ]; then
         configure_solver
         configure_channels
         create_directories
@@ -305,8 +304,13 @@ main() {
         verify_packages
     fi
 
-    if [ "$ANACONDA" = true]; then
+    if [ "$ANACONDA" = true ]; then
         echo "Configuring Anaconda CLI..."
+        check_anaconda_installed
+    fi
+
+    if [ "$MCP" = true ]; then
+        echo "Configuring Anconda MCP..."
     fi
     
     # Display summary
@@ -316,4 +320,4 @@ main() {
 }
 
 # Run main function
-main
+main "$@"
