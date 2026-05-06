@@ -291,6 +291,20 @@ Supporting docs, decision guides, and best-practice write-ups: package manager d
 
 ---
 
+## 🎯 Learning Objectives
+By the end of this curriculum, you will be able to:
+- Create, lock, and reproduce conda environments across platforms using conda-lock and conda-forge
+- Audit a dependency graph for known CVEs using anaconda-audit and interpret Anaconda-curated vulnerability statuses
+- Package a complete Python environment, including CUDA binaries and embedded databases, as a relocatable tarball for air-gapped deployment
+- Build a production-grade ingestion pipeline with schema enforcement, Pydantic validation, and unsupervised anomaly detection
+- Produce structured, JSON-serializable pipeline outputs that downstream agents can consume without additional parsing
+- Implement a single-agent tool loop using LangGraph and the OpenAI-compatible client interface
+- Compose a multi-agent system with a supervisor, role-separated agents, and per-step isolated environments using Metaflow @conda decorators
+- Swap LLM backends (Anthropic API, AI Navigator, vLLM, Anaconda Platform) by changing a single environment variable, with no changes to agent logic
+- Add graceful degradation, eval-as-CI, per-run observability cards, and cross-run vector memory to an existing Metaflow pipeline
+- Verify model provenance using a CycloneDX AIBOM and SHA-256 checksums before deployment
+- Run the same Python analysis pipeline in a browser tab via PyScript and as a native desktop application via BeeWare Briefcase
+
 ## 🌠 Prerequisites
 
 ```bash
