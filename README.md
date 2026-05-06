@@ -325,3 +325,11 @@ Anaconda demos for PyCon US 2026, Long Beach, May 14–22.
 
 Built with the Anaconda ecosystem for 50M+ Python users.  
 The pipeline never changes. Everything else does.
+
+For questions contact @dawnwages
+Target Audience: Software Engineers, AI Developers, ML Engineers, Data Scientists
+Resource Type: Show
+Metrics: Stars, forks, completions
+
+# License
+MIT License - see LICENSE file for details.
