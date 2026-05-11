@@ -1,4 +1,9 @@
-# Your First Intelligent App: Foundations of Intelligent Software Systems
+# 03 — Multi-Agent Architecture
+
+**Estimated time:** Under 7 minutes  
+**Prerequisites:** Fresh clone with submodules initialised — see below.
+ 
+---
 
 What's the difference between a single agent and an intelligent application? An `agent` is one component of an autonomous system. Once you add orchestration, data ingress/egress, persistence, CI/CD, multi-agent coordination, and evaluation, you're building an intelligent software system.
 
@@ -8,7 +13,9 @@ This module introduces a higher-level architecture:
 - **MetaFlow** for workflow versioning, reproducibility, and model lifecycle tracking
 - **promptfoo** for prompt quality and model response evaluation
 
-```bash
+Module 02 built one agent with four tools. This module adds two things on top of it — without touching the tools:
+ 
+```
 ┌─────────────────────────────────────────────────────┐
 │          METAFLOW (infrastructure layer)            │
 │  deployment · state · versioning · compute · data   │
@@ -20,6 +27,34 @@ This module introduces a higher-level architecture:
 │   └──────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────┘
 ```
+# Before you start 
+
+## Fresh clone
+
+```bash
+git clone https://github.com/Anaconda-Sandbox/building-intelligent-apps-with-anaconda
+cd building-intelligent-apps-with-anaconda
+git submodule update --init --recursive   # ← required: gets wasp18b_lightcurve.csv
+
+conda env create -f 03-multi-agent-architecture/environment.yml
+conda activate multi-agent
+
+# Register the kernel so Jupyter can find it
+python -m ipykernel install --user \
+    --name multi-agent \
+    --display-name "Python 3 (multi-agent)"
+```
+
+## Three ways to run this module
+
+| Mode | LLM required | API key required | What you see |
+|---|---|---|---|
+| **1 — Metaflow** (default) | No | No | 5-step pipeline, versioned, completion screen |
+| **2 — LangGraph** (`--llm`) | Local or remote | No (AI Navigator) / Yes (external) | Two-agent supervisor trace, completion screen |
+| **3 — Check** (`--check`) | No | No | Environment verified, ready screen |
+
+---
+
 
 ## Why LangGraph?
 
@@ -31,61 +66,148 @@ LangGraph is designed for stateful, multi-step agent orchestration. It is a natu
 
 Use LangGraph to wire together the same underlying tools from Module 2 and Module 1, while preserving the source-of-truth pipeline in `01-data-sources/ingestion.py`.
 
-## Why MetaFlow?
 
-MetaFlow is useful for building production-grade model workflows and tracking the lifecycle of your experiments.
-
-Use MetaFlow to:
-
-- define the overall end-to-end workflow for data, validation, and agent execution
-- version the inputs, outputs, and model decisions
-- capture metadata for repeatability and auditing
-
-## Why promptfoo?
-
-promptfoo is a lightweight, open-source toolkit for evaluating prompts and model responses.
-
-Use promptfoo to:
-
-- define evaluation scenarios for your agent prompts
-- compare model outputs across prompt variants and LLM backends
-- monitor quality regressions as your system evolves
-
-## Recommended architecture
-
-1. Keep `01-data-sources/ingestion.py` as the source-of-truth pipeline.
-2. Use `02-your-first-agent` to expose those pipeline functions as tools.
-3. Build a LangGraph orchestration layer in `03-multi-agent-architecture`:
-   - agent/tool registration
-   - workflow state transitions
-   - decision logic between agent steps
-4. Add MetaFlow around the workflow for reproducibility and tracking.
-5. Use promptfoo to evaluate prompt variants and LLM outputs.
-
-## Files in this module
-
-- `langgraph_orchestrator.py` — LangGraph orchestration example for the Module 2 tools
-- `metaflow_workflow.py` — MetaFlow workflow for the same load/validate/analyze pipeline
-- `promptfoo_evaluation.py` — promptfoo evaluation sketch for prompt and model response quality
-
-## Example workflow
-
-- `load_lightcurve` loads a CSV with schema assurance
-- `validate_lightcurve` returns a `ValidationReport` for decision-making
-- `run_feature_anomaly_pipeline` generates features and anomaly summaries
-- LangGraph routes the outputs to the next agent or evaluation step
-- promptfoo scores the agent prompt and output quality
-- MetaFlow records the run, inputs, and outputs for future comparison
-
-## Run these examples
+### Mode 1 — Metaflow pipeline (no LLM, always works)
 
 ```bash
-python langgraph_orchestrator.py
-metaflow run metaflow_workflow.py
-python promptfoo_evaluation.py
+bash 03-multi-agent-architecture/run_demo.sh
 ```
+
+Runs `metaflow_workflow.py` — a 5-step `FlowSpec` that loads, validates, engineers features, detects anomalies, and builds the agent context. No LLM call. Every step is versioned and independently retryable.
+
+```
+Steps: start → load_data → validate_data → feature_engineering → summarize → end
+```
+
+Ends with:
+```
+╔══════════════════════════════════════════════════════════════╗
+║  🛸  WASP-18 b  ·  MODULE 03 COMPLETE                       ║
+║      Metaflow workflow: 5 steps, versioned, reproducible.   ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+---
+
+### Mode 2 — LangGraph two-agent supervisor (live LLM)
+
+```bash
+bash 03-multi-agent-architecture/run_demo.sh --llm
+```
+
+Runs `langgraph_orchestrator.py` — a `DataAgent` and `AnalysisAgent` coordinated by a LangGraph supervisor. Imports the `@tool`-decorated functions from Module 02 directly — no re-implementation.
+
+**AI Navigator (local, no API key):**
+```bash
+# Start AI Navigator, load a model, start the API server — then:
+bash 03-multi-agent-architecture/run_demo.sh --llm
+# INFERENCE_BASE_URL defaults to http://localhost:8080/v1
+```
+
+**External endpoint:**
+```bash
+export INFERENCE_BASE_URL="https://api.anthropic.com/v1"
+export INFERENCE_API_KEY="sk-ant-..."
+export INFERENCE_MODEL="claude-haiku-4-5-20251001"
+bash 03-multi-agent-architecture/run_demo.sh --llm
+
+# vLLM (self-hosted):
+export INFERENCE_BASE_URL="http://your-server:8000/v1"
+export INFERENCE_MODEL="mistralai/Mistral-7B-Instruct-v0.3"
+bash 03-multi-agent-architecture/run_demo.sh --llm
+```
+
+---
+
+### Mode 3 — Environment check only
+
+```bash
+bash 03-multi-agent-architecture/run_demo.sh --check
+```
+
+Runs all four verification steps (Python, conda env, packages, data + submodule + Module 02 files) and exits without running anything. Ends with a READY screen showing the next commands to run.
+
+---
+
+### Notebook
+
+```bash
+bash 03-multi-agent-architecture/run_demo.sh --notebook
+# Opens 03_multi_agent_architecture.ipynb in Jupyter — press Run All
+```
+
+---
+
+## What the script checks (all four modes)
+
+1. **Environment** — Python 3.10+, `multi-agent` conda env, package versions (metaflow, langgraph, polars, pydantic)
+2. **Data** — `polars_demo` submodule initialised, `wasp18b_lightcurve.csv` present
+3. **Module 02 files** — `langchain_agent_example.py` and `agent_tools.py` present (Module 03 imports from them)
+4. **Pipeline smoke test** — loads the CSV, validates, runs IsolationForest, confirms the numbers
+
+---
+
+## Environment
+
+All packages install from conda-forge — no pip section required.
+
+```bash
+conda env create -f 03-multi-agent-architecture/environment.yml
+conda activate multi-agent
+```
+
+| Package | Role |
+|---|---|
+| `metaflow>=2.18` | Workflow orchestration — `@step`, `@retry`, `FlowSpec` |
+| `langgraph` | Stateful multi-agent graph orchestration |
+| `langchain-core` | Core LangChain abstractions |
+| `langchain-openai` | OpenAI-compatible client integration |
+| `polars`, `numpy`, `scikit-learn`, `pydantic` | Data pipeline — inherited from Modules 01 and 02 |
+| `ragas` | Agent output evaluation — Faithfulness, AnswerRelevancy, ContextRelevance |
+| `ipykernel`, `jupyterlab` | Jupyter kernel registration and notebook interface |
+
+---
+
+## Files
+
+```
+03-multi-agent-architecture/
+├── README.md                        ← this file
+├── run_demo.sh                      ← start here
+├── environment.yml                  ← conda env: multi-agent (all conda-forge)
+├── langgraph_orchestrator.py        ← LangGraph two-agent supervisor
+├── metaflow_workflow.py             ← Metaflow 5-step FlowSpec
+└── ragas_evaluation.py              ← agent output evaluation (ragas)
+```
+
+---
+
+## Why each tool
+
+**LangGraph** is the agent loop — stateful graph execution, tool calling, conditional routing between agents. `DataAgent` owns the data quality gate; `AnalysisAgent` owns the science output. The supervisor routes between them.
+
+**Metaflow** is the infrastructure layer — step versioning, artifact storage, retry logic, and the ability to move the same flow to remote compute without changing a line of code.
+
+**ragas** evaluates the quality of the agent's output using LLM-as-judge metrics. It's a pure Python library — `conda install conda-forge::ragas` — no Node.js required. Three metrics are used:
+
+- **Faithfulness** — are the agent's claims grounded in the context it was given? A score below 0.7 means the agent hallucinated facts not present in the pipeline data.
+- **Answer Relevancy** — does the agent's answer actually address the question?
+- **Context Relevance** — was the retrieved context useful for producing the answer?
+
+```bash
+# Default: evaluate a pre-built answer (ragas judge still needs an LLM endpoint)
+python ragas_evaluation.py
+
+# Live: run the LangGraph agent first, then evaluate its actual output
+python ragas_evaluation.py --live
+```
+
+The evaluation uses the same `INFERENCE_BASE_URL` as the agent — AI Navigator, vLLM, or any OpenAI-compatible endpoint.
+
+---
 
 ## Notes
 
-This module is about architecture, not changing the pipeline. The data and model logic stay in Modules 1 and 2. Module 3 adds orchestration and evaluation layers on top.
+`01-data-sources/ingestion.py` is the source of truth. `02-your-first-agent/agent_tools.py` is the tool layer. Module 03 adds orchestration on top — nothing in Modules 01 or 02 changes.
 
+Module 03 imports directly from Module 02 (`langchain_agent_example.py`, `agent_tools.py`). Both modules must be present in the same repo clone.

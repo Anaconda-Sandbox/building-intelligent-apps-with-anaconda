@@ -24,9 +24,9 @@ dependencies:
   # langchain-core:  core LangChain abstractions
   # langchain-openai: OpenAI-compatible client integration
   # langgraph:       stateful multi-agent graph orchestration
-  # pyyaml:          used by promptfoo_evaluation.py
+  # ragas:           agent output evaluation — Faithfulness, AnswerRelevancy, ContextRelevance
   - metaflow>=2.18
   - langchain-core
   - langchain-openai
   - langgraph
-  - pyyaml
+  - ragas
