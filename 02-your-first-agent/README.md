@@ -38,9 +38,25 @@ build_agent_context()  function → @tool  ← LLM assembles the summary
 └── environment.yml               ← conda env: first-agent
 ```
 
-## Getting started
+# Before you start
 
-### Three ways to complete this module
+## Fresh clone
+
+```bash
+git clone https://github.com/Anaconda-Sandbox/building-intelligent-apps-with-anaconda
+cd building-intelligent-apps-with-anaconda
+git submodule update --init --recursive   # ← required: gets wasp18b_lightcurve.csv
+
+conda env create -f 02-your-first-agent/environment.yml
+conda activate first-agent
+
+# Register the kernel so Jupyter can find it
+python -m ipykernel install --user \
+    --name first-agent \
+    --display-name "Python 3 (first-agent)"
+```
+
+## Three ways to complete this module
  
 Do you need an API key? Do you need an LLM running? Depends on the mode.
  
