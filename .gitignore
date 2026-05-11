@@ -12,3 +12,4 @@ build/
 .env/
 Miniconda3.sh
 =*
+.metaflow/
