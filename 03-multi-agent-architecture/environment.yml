@@ -1,16 +1,32 @@
-name: first-agent
+name: multi-agent
 channels:
   - conda-forge
   - defaults
 dependencies:
   - python=3.11
-  - pip
-  - numpy
-  - polars
-  - scikit-learn
+
+  # ── Jupyter ───────────────────────────────────────────────────────────────────
+  # Required to open the notebook and register this env as a Jupyter kernel.
+  - ipykernel
+  - jupyterlab
+
+  # ── Data pipeline ─────────────────────────────────────────────────────────────
+  # Inherited from Modules 01 and 02 — agent_tools.py imports all of these.
+  - polars>=1.0
+  - numpy>=1.26
+  - scikit-learn>=1.4
   - pydantic>=2.0
   - python-dotenv
-  - pip:
-    - langchain-openai
-    - langchain-core
-    - langgraph>=0.2
+
+  # ── Orchestration ─────────────────────────────────────────────────────────────
+  # All available on conda-forge — no pip required.
+  # metaflow:        workflow orchestration, @conda step decorator sources from conda-forge
+  # langchain-core:  core LangChain abstractions
+  # langchain-openai: OpenAI-compatible client integration
+  # langgraph:       stateful multi-agent graph orchestration
+  # pyyaml:          used by promptfoo_evaluation.py
+  - metaflow>=2.18
+  - langchain-core
+  - langchain-openai
+  - langgraph
+  - pyyaml
