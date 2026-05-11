@@ -58,11 +58,27 @@ The `deploy/` docs are reference material for setup steps that happen outside Py
 
 ---
 
+# Before you start
+
+## Fresh clone
+
+```bash
+git clone https://github.com/Anaconda-Sandbox/building-intelligent-apps-with-anaconda
+cd building-intelligent-apps-with-anaconda
+git submodule update --init --recursive   # ← required: gets wasp18b_lightcurve.csv
+
+conda env create -f 04-deployment-and-inference/environment.yml
+conda activate deployment-inference
+
+# Register the kernel so Jupyter can find it
+python -m ipykernel install --user \
+    --name deployment-inference \
+    --display-name "Python 3 (deployment-inference)"
+```
+
 ## Quick start
 
 ```bash
-conda env create -f environment.yml
-conda activate deployment-inference
 
 # Set your inference target (pick one):
 export INFERENCE_BASE_URL="http://localhost:8080/v1"       # AI Navigator
