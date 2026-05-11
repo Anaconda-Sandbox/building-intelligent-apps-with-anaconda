@@ -1,0 +1,50 @@
+name: foundation
+channels:
+  - main
+  - conda-forge
+dependencies:
+  # Core Python
+  - python>=3.10
+
+  # Package management and lock files
+  - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
+  - pipdeptree
+
+  # Development and utilities
+  - pip
+  - pytest>=7.0
+  - packaging
+  - unearth
+
+  # HTTP/2 and networking (for conda-pypi operations)
+  - h2
+  - httpx
+  - hishel
+
+  # Data handling
+  - msgpack-python
+  - typing-extensions
+
+  # Database support
+  - anysqlite
+  - pgvector
+
+  # LLM & AI Frameworks
+  - langchain
+  - llama-index
+  - pydantic>=2.0
+
+  # MCP (Model Context Protocol)
+  - mcp
+  - fastmcp
+
+  # Agent & Workflow Frameworks
+  - langgraph
+
+  # Async & HTTP utilities
+  - aiohttp
+  - python-dotenv
+
+  # Panel App
+  - panel
+  - panel-material-ui
