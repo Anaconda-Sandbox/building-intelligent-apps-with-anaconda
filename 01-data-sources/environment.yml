@@ -1,0 +1,30 @@
+name: data-foundations
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+ # Core Python
+  - python>=3.10
+  # ── Jupyter ───────────────────────────────────────────────────────────────────
+  # ipykernel registers this environment as a selectable Jupyter kernel.
+  # Without it, `jupyter lab` can't find the env and throws the ipykernel error.
+  # jupyterlab is the interface; ipykernel is the bridge between it and Python.
+  - ipykernel
+  - jupyterlab
+
+  # ── Data pipeline ─────────────────────────────────────────────────────────────
+  # Everything the notebook and ingestion.py actually import.
+  # polars        → load_lightcurve(), feature engineering
+  # numpy         → IsolationForest features, rolling window arrays
+  # matplotlib    → light curve and anomaly plots
+  # scikit-learn  → IsolationForest anomaly detection
+  # pydantic      → ValidationReport, LightcurveSchema
+  - polars>=1.0
+  - numpy>=1.26
+  - matplotlib>=3.8
+  - scikit-learn>=1.4
+  - pydantic>=2.0
+
+   # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
+  - pip
