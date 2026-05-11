@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
  # Core Python
-  - python>=3.10
+  - python=3.11
   # ── Jupyter ───────────────────────────────────────────────────────────────────
   # ipykernel registers this environment as a selectable Jupyter kernel.
   # Without it, `jupyter lab` can't find the env and throws the ipykernel error.

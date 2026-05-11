@@ -2,16 +2,14 @@ name: foundation
 channels:
   - main
   # - main-x  # New channel for pure wheels packages
-  # - community  # New channel for community-maintained packages
   - conda-forge
 dependencies:
   # Core Python
-  - python>=3.10
+  - python=3.11
 
   # Package management and lock files
   - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
   - pipdeptree
-  # - anaconda-cli
 
   # Development and utilities
   - pip
@@ -48,7 +46,3 @@ dependencies:
   # Async & HTTP utilities
   - aiohttp
   - python-dotenv
-
-  # Panel App
-  - panel
-  - panel-material-ui
