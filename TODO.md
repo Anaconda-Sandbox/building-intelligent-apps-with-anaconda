@@ -2,8 +2,8 @@
 - [ ] conda-forge release: create a pinned version where everything is conda-forge, then push a release that is all anaconda channels. 
     - [ ] update all of the environment.yml so there's only defaults, main-x, and conda-pypi
 - [ ] MAIN README: Update README to reflect all the changes and have a chart for how long it took you to get there.
-- [ ] reference library: Remove all of the reference library and add it to a different branch
-- [ ] example applications: Remove all of the example applications
+- [ x] reference library: Remove all of the reference library and add it to a different branch
+- [ x] example applications: Remove all of the example applications
 - [ ] run everything in GH codespaces -- add to documentation that everything has been optimized for github codespaces when it does not require a desktop app: section #00-mcp-your-environment, only option Claude Desktop; section 02 - your first agent, option B: Anaconda Desktop; section 03 deployment and inference option A: Anaconda Desktop; section 08 native applications, option B: BeeWare builds native applications
 - [ ] update example.environment.yml
 - [ ] add `See a problem? Submit an Issue.` section to README
@@ -11,7 +11,8 @@
 - [ ] Move code to Anaconda Labs
 - [ ] Checks for every section
     - [ ] Runs in under 7 mintues
-    - [ ] 
+    - [ ] README is clear
+    - [ ] Shows completion screen at the end
 - [ ] 05, 06, 07, 08, 09: Complete the tutorials and make sure they run
     - [ ] 05: Label as experimental and requires Brev account -- see if we can get Brev codes
     - [ ] 06: Almost done, run 06 all the way through to make sure it works. 
