@@ -7,32 +7,65 @@
 
 ## The point of this module
 
-The agents from Module 03 call an LLM endpoint via the `openai` client. That endpoint is just a URL. This module shows what can live at that URL — and demonstrates that swapping it requires changing one environment variable, not rewriting your agents.
+The agents from Module 03 call an LLM via an inference client. That client points at a URL. This module shows what lives at that URL — Anthropic's API, AI Navigator, vLLM, or Anaconda Platform — and proves that swapping between them is a one-line env var change, not a code change.
 
-This is the **portable inference contract**:
-
+The portable inference contract — the same client works with Anthropic, AI Navigator, vLLM, or Anaconda Platform:
+ 
 ```python
-# Everything downstream of this is identical regardless of which server is running
+from anthropic import Anthropic
+ 
+client = Anthropic(
+    api_key=os.environ["ANTHROPIC_API_KEY"],   # or "not-needed" for local endpoints
+    base_url=os.environ.get("ANTHROPIC_BASE_URL", "https://api.anthropic.com"),
+)
+```
+ 
+Or via the OpenAI-compatible wrapper (for AI Navigator, vLLM, Anaconda Platform):
+ 
+```python
+from openai import OpenAI
+ 
 client = OpenAI(
     base_url=os.environ["INFERENCE_BASE_URL"],
     api_key=os.environ["INFERENCE_API_KEY"],
 )
-```
 
 ---
 
 ## Three inference targets
 
 ```
-Target                          base_url                            Use case
-──────────────────────────────  ──────────────────────────────────  ─────────────────────────────
-AI Navigator (local)            http://localhost:8080               Dev — no API key, no cloud
-vLLM (self-hosted GPU)          http://your-server:8000/v1          Production GPU, full control
-Anaconda Platform Model Server  $MODEL_SERVER_BASE_URL              Enterprise, governed, managed
+Target                                              base_url                            Use case
+──────────────────────────────                      ──────────────────────────────────  ─────────────────────────────
+AI Navigator or Anaconda Desktop (local)            http://localhost:8080               Dev — no API key, no cloud
+vLLM (self-hosted GPU)                              http://your-server:8000/v1          Production GPU, full control
+Anaconda Platform Model Server                      $MODEL_SERVER_BASE_URL              Enterprise, governed, managed
 ```
 
-All three are OpenAI API-compatible for chat completions. The agents don't know which one they're talking to.
+All three are API-compatible for chat completions. The agents don't know which one they're talking to.
 
+---
+
+## Local inference: AI Navigator and Anaconda Desktop
+ 
+Anaconda provides two desktop applications for running LLMs locally — both expose an OpenAI-compatible API server that `inference_client.py` connects to without any code changes.
+ 
+**Anaconda AI Navigator** is the current shipping product. It downloads and manages open-source LLMs, serves them via a built-in llama.cpp API server, and exposes an OpenAI-compatible endpoint at `http://localhost:8080/v1`. No API key required. Available on macOS and Windows.
+ 
+**Anaconda Desktop** is the next generation — it adds secure local model deployment, an integrated chat interface, environment management, and Anaconda Platform integration alongside the same inference server capabilities. Currently available through a limited early access program; AI Navigator covers the same inference use case today.
+ 
+For this module, either application works identically:
+ 
+```bash
+export INFERENCE_BASE_URL="http://localhost:8080/v1"
+export INFERENCE_API_KEY="not-needed"
+```
+ 
+Setup steps:
+1. Open AI Navigator (or Anaconda Desktop)
+2. Go to **Models** — download any Desktop Deployable model
+3. Go to **API Server** — select the model and press **Start**
+4. The server is ready when you see `Server listening on 127.0.0.1:8080`
 ---
 
 ## Module structure
@@ -79,7 +112,6 @@ python -m ipykernel install --user \
 ## Quick start
 
 ```bash
-
 # Set your inference target (pick one):
 export INFERENCE_BASE_URL="http://localhost:8080/v1"       # AI Navigator
 export INFERENCE_BASE_URL="http://your-server:8000/v1"    # vLLM
