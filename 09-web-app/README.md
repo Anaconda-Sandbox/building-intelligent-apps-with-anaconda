@@ -1,5 +1,5 @@
 # 09 — Panel App
-**Estimated time:** Under 7 minutes
+**Estimated time:** ~1-3 minutes
 **Prerequisites:** None beyond Module 01 — this is a standalone addendum showing the pipeline delivered in a new context.
 
 ---

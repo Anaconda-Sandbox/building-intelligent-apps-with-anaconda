@@ -1,4 +1,9 @@
-# Your First Agent: Building Intelligent Workflows
+# 02 — First Agent
+
+**Estimated time:** ~3 minutes  
+**Prerequisites:** Fresh clone with submodules initialised — see below.
+ 
+---
 
 This module turns the deterministic Module 1 pipeline into an agent-driven workflow.
 

@@ -1,8 +1,8 @@
 # 🚀 Building Intelligent Apps with Anaconda
 
-> **Mission status: WIP — PyCon US 2026, Long Beach, May 14–22**
+> **Mission status: Ready for lift-off**
 
-A hands-on curriculum for building production-grade intelligent applications with the Anaconda ecosystem. Every module is a self-contained 7-minute narrated demo with pre-run outputs — designed to show the code and the decisions, not walk you through setup.
+A hands-on curriculum for building production-grade intelligent applications with the Anaconda ecosystem. Every module is a self-contained < 7-minute narrated demo with pre-run outputs or script `run_demo.sh` — designed to show the code and the decisions, not walk you through setup.
 
 Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star by NASA's TESS telescope. We process its light curve, build agents to reason about it, deploy those agents to production, secure the supply chain, and ship the result — to a browser tab, to a native app, to an air-gapped server 800km away. Same data. Every module.
 
@@ -16,22 +16,22 @@ Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star 
                      │  a hot Jupiter 1,300 light-years from home  │
                      └─────────────────────────────────────────────┘
 
- PRE-LAUNCH         -1   MCP orientation     talk to Anaconda tools before liftoff
+ PRE-LAUNCH         -1   MCP orientation        ~5 mins            talk to Anaconda tools before liftoff - requires Claude Desktop
  ────────────────────────────────────────────────────────────────────────────────
- CORE STACK         00   Foundation          conda — the launch pad
-                    01   Data sources        TESS photons → Python → ValidationReport
-                    02   Your first agent    one agent, one tool, one answer
-                    03   Multi-agent         crew of agents, Metaflow orchestration
+ CORE STACK         00   Foundation             ~1-3 mins          conda — the launch pad - build script
+                    01   Data sources           ~1-3 mins          TESS photons → Python → ValidationReport - prerun notebook
+                    02   Your first agent       ~3 mins            one agent, one tool, one answer - build script
+                    03   Multi-agent            ~5 mins            crew of agents, Metaflow orchestration - build script
  ────────────────────────────────────────────────────────────────────────────────
- DEEP SPACE         04   Deployment          swap the LLM endpoint, keep the agents
-                    05   GPU acceleration    Nemotron on NVIDIA iron, 47× faster
-                    06   App architecture    harness, evals, vector memory, cards
-                    07   Mission critical    CVEs, conda-lock, air-gap, AIBOM
+ DEEP SPACE         04   Deployment             ~3 mins            swap the LLM endpoint, keep the agents - prerun notebook
+                    05   GPU acceleration       UNKNOWN            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
+                    06   App architecture       ~5-7 mins          harness, evals, vector memory, cards - build script
+                    07   Mission critical       ~5 mins            CVEs, conda-lock, air-gap, AIBOM - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
- EXTRAVEHICULAR     08   Native apps         PyScript (browser) + BeeWare (native)
+ EXTRAVEHICULAR     08   Native apps            ~5-7 mins          PyScript (browser) + BeeWare (native) - build script
  ────────────────────────────────────────────────────────────────────────────────
- MISSION CONTROL   100   Example apps        full reference implementations
-                   101   Reference library   decision guides, best practices
+ MISSION CONTROL    --   Example environment                       reference environment that would work for all of the modules
+                    --   README                                    YOURE HERE
 ```
 
 The payload — `ingestion.py` and `ValidationReport` — never changes. What changes is where it runs and what reasons about it.
@@ -42,6 +42,7 @@ The payload — `ingestion.py` and `ValidationReport` — never changes. What ch
 
 ### `-1` — MCP: Pre-flight Checklist
 **Make sure ground control can hear you.**
+Time: ~5 minutes 
 
 The Model Context Protocol is how AI assistants talk to Anaconda tools. Before the first `conda install`, verify your MCP setup so Claude Desktop can manage environments, query packages, and inspect CVEs on your behalf.
 
@@ -51,21 +52,17 @@ Tools: `anaconda-mcp`, Claude Desktop
 
 ### `00` — Foundation: The Launch Pad
 **You can't reach orbit without a stable platform.**
+Time: ~1-3 minutes
 
-Every agent, every pipeline step, every GPU kernel in this curriculum runs inside a conda environment. This module makes that concrete: why conda over pip alone, how environment isolation works, and the tools that turn a fleeting `pip install` into a reproducible, lockable, shippable artifact.
+Every agent, every pipeline step, every GPU kernel in this curriculum runs inside a conda environment. This module makes that concrete: why conda, how environment isolation works, and the tools that turn a fleeting `pip install` into a reproducible, lockable, shippable artifact.
 
-```bash
-conda create -n mission python=3.11
-conda activate mission
-conda-lock -f environment.yml -p linux-64   # lock for reproducibility
-```
-
-Tools: `conda`, `conda-lock`, `conda-forge`, `pixi`, Anaconda Distribution
+Tools: `conda`, `conda-pypi` (experimental), `conda-forge`, Anaconda Distribution
 
 ---
 
 ### `01` — Data Sources: First Contact
 **Raw photons from 1,300 light-years away, cleaned up and ready for agents.**
+Time: ~1-3 minutes
 
 Built on Daina Bouquin's [polars_demo](https://github.com/dbouquin/polars_demo) — a real TESS phase-folded light curve of WASP-18 b, a hot Jupiter completing an orbit every 22 hours. We extend it into a production-ready pipeline: schema enforcement, Pydantic validation, IsolationForest anomaly detection, and the `ValidationReport` that every subsequent module consumes.
 
@@ -80,41 +77,41 @@ The three columns that travel through the entire curriculum.
 - IsolationForest — transit anomaly detection without labelled data
 - `agent_context` — the structured payload that becomes Module 02's agent input
 
-Tools: Polars, scikit-learn, Pydantic, `ingestion.py`
+Tools: `Polars`, `scikit-learn`, `Pydantic`, `ingestion.py`
 
 ---
 
 ### `02` — Your First Agent: One Crew Member
 **A single agent, two tools, a classification.**
+Time: ~3 minutes
 
-`ingestion.py` functions become LangGraph tools. One agent calls `load_lightcurve`, passes the result to `validate_lightcurve`, reasons over the `ValidationReport`, and returns a structured transit classification. Claude Haiku is the default crew member — swap the `base_url` for AI Navigator to fly offline.
+`ingestion.py` functions become LangGraph tools. One agent calls `load_lightcurve`, passes the result to `validate_lightcurve`, reasons over the `ValidationReport`, and returns a structured transit classification. Claude Haiku is the default crew member — swap the `base_url` for AI Navigator or Anaconda Desktop to fly offline. Demo can be completed without model access, but stops at what will be served to the model.
 
 Default LLM: `claude-haiku-4-5-20251001` via Anthropic API, or AI Navigator local server.
 
-Tools: LangGraph, Anaconda MCP, `openai` client
+Tools: `LangGraph`, `Anthropic` or `openai` client
 
 ---
 
 ### `03` — Multi-Agent Architecture: Assemble the Crew
 **Two agents, one supervisor, `foreach` parallelism across 50 targets.**
+Time: ~5 minutes
 
-`DataAgent` and `AnalysisAgent` fly in formation, coordinated by a LangGraph supervisor. Metaflow wraps the whole operation as a `FlowSpec` with `@conda` per step — each agent role gets its own isolated, lockable environment. A dependency conflict between Polars and LangGraph is structurally impossible.
+`DataAgent` and `AnalysisAgent` fly in formation, coordinated by a LangGraph supervisor. Metaflow wraps the whole operation as a `FlowSpec` — each agent role gets its own isolated, lockable environment. A dependency conflict between Polars and LangGraph is structurally impossible.
 
 ```
 start → ingest (polars, scikit-learn)
       → analyze (openai, langgraph)
       → join → end
-Each step: its own @conda env, @retry, auditable supply chain.
 ```
 
-Deployed to Outerbounds, AWS EKS, or a Linux box + cron. Flow code unchanged for all three. `deploy/` has the guides.
-
-Tools: LangGraph, Metaflow 2.18+, `@conda` per step, Outerbounds
+Tools: `LangGraph`, `Metaflow` 2.18+, `FlowSpec`
 
 ---
 
 ### `04` — Deployment and Inference: Mission Control Endpoints
 **Three LLM targets, one agent interface, zero code changes.**
+Time: ~3 minutes
 
 The agents from Module 03 call an LLM via the `openai` client. That client points at a URL. This module shows what lives at the URL — and proves that swapping it is a one-line env var change.
 
@@ -134,6 +131,7 @@ Tools: vLLM, Anaconda Platform Model Servers, `inference_client.py`
 
 ### `05` — GPU-Accelerated Intelligence: Afterburners
 **Same pipeline. NVIDIA iron. 47× faster feature engineering.**
+Time: UNKNOWN - experimental
 
 The Module 03 flow gets a CUDA upgrade. `compute_features` moves from Polars CPU rolling windows to a CUDA Python 1.0 kernel. The LLM switches from Claude Haiku to Nemotron 3 Nano on vLLM via Brev. The agents don't know any of this happened.
 
@@ -163,6 +161,7 @@ Tools: Brev, CUDA Python 1.0, vLLM, Nemotron 3 Nano (BF16), NemoClaw
 
 ### `06` — App Architecture: Mission Hardening
 **The pipeline that keeps flying when things go wrong.**
+Time: ~5-7 minutes
 
 Module 03's flow works on good data with a responsive LLM. This module adds four additive patterns that keep it running in production:
 
@@ -179,11 +178,11 @@ The `evaluate` step runs assertion functions from `evals/assertions.py` — plai
 
 The DuckDB memory store (from the vector DB comparison: pgvector / MongoDB Atlas / Neo4j / **DuckDB** — embedded, portable, `conda-pack`-able) gives agents memory across runs: past `ValidationReport` results retrieved by cosine similarity and injected into the system prompt.
 
-Tools: Metaflow, LangGraph, Pydantic, DuckDB, `@catch`, `@card`
+Tools: LangGraph, Pydantic, DuckDB, Metaflow: FlowSpec, `@catch`, `@card`, `@conda`, `@retry`
 
 ---
 
-### `07` — Mission-Critical Infrastructure: No Failures Tolerated
+### `07` — Mission-Critical Infrastructure: No Failures Tolerated"
 **Prove the environment is safe before it flies.**
 
 Supply chain security isn't a feature you add at the end. It's the infrastructure the pipeline runs on. Five layers, zero pipeline code changes:
