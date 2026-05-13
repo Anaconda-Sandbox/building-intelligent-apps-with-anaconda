@@ -16,3 +16,4 @@ Miniconda3.sh
 *.tar.gz
 memory/*.duckdb
 TODO.md
+.conda/

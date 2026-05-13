@@ -41,7 +41,7 @@
 - [ ] Add skill file for this repo and docs on how to use the skill file with various applications
 
 # QTNA
-- Do we want to have the `.conda` directory?
+- [ x] YES Do we want to have the `.conda` directory?
 - What is the default model for the OpenAI implementation 
 - Does section 3 really run against 50 targets?
 
