@@ -1,6 +1,6 @@
 # 03 — Multi-Agent Architecture
 
-**Estimated time:** Under 7 minutes  
+**Estimated time:** ~5 minutes  
 **Prerequisites:** Fresh clone with submodules initialised — see below.
  
 ---

@@ -1,6 +1,6 @@
 # 05 — GPU-Accelerated Intelligence
 
-**Estimated time:** 7 minutes  
+**Estimated time:** UNKNOWN (EXPERIMENTAL)  
 **Prerequisites:** Completed `03-multi-agent-architecture` — the WASP-18 b pipeline and LangGraph + Metaflow patterns carry forward here unchanged.
 
 ---

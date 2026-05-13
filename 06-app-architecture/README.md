@@ -1,6 +1,6 @@
 # 06 — App Architecture
 
-**Estimated time:** 7 minutes
+**Estimated time:** ~5-7 minutes
 **Prerequisites:** None — all dependencies are copied locally (Option B). See `agents/`, `evals/`, `vectordb/`, and `ingestion.py`.
 
 ---
@@ -188,7 +188,7 @@ All packages from conda-forge. No pip section.
 
 | Package | Role |
 |---|---|
-| `metaflow>=2.18` | Workflow orchestration — `@catch`, `@retry`, `@card`, `foreach` |
+| `metaflow>=2.18` | Workflow orchestration and env setup — `@conda`, `@catch`, `@retry`, `@card`, `foreach` |
 | `langgraph` | Agent runtime — `MemorySaver` checkpointer, durable execution |
 | `anthropic` | Primary inference — Claude Haiku default |
 | `openai>=1.30` | OpenAI-compatible client — AI Navigator / vLLM fallback |

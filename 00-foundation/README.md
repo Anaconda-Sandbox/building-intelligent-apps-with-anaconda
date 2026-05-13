@@ -1,4 +1,9 @@
-# Foundation: AI Python Development Environment Setup
+# 01 — The Foundation -- Your Environment
+
+**Estimated time:** ~1-3 minutes  
+**Prerequisites:** Python Development Environment Setup— see below.
+
+---
 
 Welcome to the Foundation demo! This section sets up a complete environment for building intelligent applications with Python, including LLM frameworks, MCP servers, and agent orchestration tools.
 
