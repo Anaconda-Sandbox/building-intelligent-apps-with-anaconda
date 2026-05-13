@@ -28,7 +28,7 @@ Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star 
                     06   App architecture       ~5-7 mins          harness, evals, vector memory, cards - build script
                     07   Mission critical       ~5 mins            CVEs, conda-lock, air-gap, AIBOM - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
- EXTRAVEHICULAR     08   Native apps            ~5-7 mins          PyScript (browser) + BeeWare (native) - build script
+ EXTRAVEHICULAR     08   Native apps*           UNKNOWN            (experimental) PyScript (browser) + BeeWare (native) - build script
                     09   Web app                ~1-3 mins          Panel app (browser) - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
  MISSION CONTROL    --   Example environment                       reference environment that would work for all of the modules
