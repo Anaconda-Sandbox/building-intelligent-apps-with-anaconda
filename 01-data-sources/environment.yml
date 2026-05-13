@@ -25,6 +25,5 @@ dependencies:
   - scikit-learn>=1.4
   - pydantic>=2.0
 
-   # ── Utilities ─────────────────────────────────────────────────────────────────
+  # ── Utilities ─────────────────────────────────────────────────────────────────
   - python-dotenv   # used in setup patterns across the curriculum
-  - pip

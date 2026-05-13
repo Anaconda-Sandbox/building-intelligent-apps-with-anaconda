@@ -16,7 +16,6 @@ dependencies:
   - numpy>=1.26
   - scikit-learn>=1.4
   - pydantic>=2.0
-  - python-dotenv
 
   # ── Orchestration ─────────────────────────────────────────────────────────────
   # All available on conda-forge — no pip required.
@@ -29,4 +28,6 @@ dependencies:
   - langchain-core
   - langchain-openai
   - langgraph
-  - ragas
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum

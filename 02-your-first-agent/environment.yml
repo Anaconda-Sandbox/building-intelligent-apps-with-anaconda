@@ -17,10 +17,12 @@ dependencies:
   - polars
   - scikit-learn
   - pydantic>=2.0
-  - python-dotenv
  
   # ── Agent stack ───────────────────────────────────────────────────────────────
   # All three are available on conda-forge — no pip section required.
   - langchain-core
   - langchain-openai
   - langgraph
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum

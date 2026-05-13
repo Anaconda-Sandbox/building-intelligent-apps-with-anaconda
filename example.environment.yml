@@ -1,17 +1,16 @@
-name: foundation
+name: building-ia
 channels:
-  - main
+  - defaults
   - conda-forge
 dependencies:
   # Core Python
-  - python>=3.10
+  - python=3.11
 
   # Package management and lock files
-  - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
+  - conda-lockfile #  Move from conda-lock to conda-lockfile in base environment
   - pipdeptree
 
   # Development and utilities
-  - pip
   - pytest>=7.0
   - packaging
   - unearth

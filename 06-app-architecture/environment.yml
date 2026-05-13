@@ -31,3 +31,6 @@ dependencies:
   - langchain-openai      # ChatOpenAI used in _build_agent()
   - langchain-anthropic   # ChatAnthropic used in _build_agent() when ANTHROPIC_API_KEY set
   - langgraph             # MemorySaver checkpointer + create_react_agent
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
