@@ -35,22 +35,25 @@ cd 00-foundation
 # Accept Anaconda terms of service
 # Learn more about (Anaconda ToS - Explain Like I'm Five)[101-reference-library/terms-of-service-ELI5.md]
 conda init
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+conda tos accept
+
+# Ensure that defaults is the only channel
+conda config --show channels
+# channels:
+#   - defaults
+
+# If not, remove others with conda config --remove channels <CHANNEL NAME>
 
 # Update to the latest conda
-conda install -n base -c defaults "conda>=26.3.2" anaconda-anon-usage
+conda install --name base "conda>=26.3.2"
 
 # Install experimental plugins in base
-# Learn more about conda-rattler-solver: https://github.com/conda-incubator/conda-rattler-solver 
 # Learn more about conda-pypi: https://github.com/conda-incubator/conda-pypi-test
-# Learn more about conda-workspaces: https://github.com/conda-incubator/conda-workspaces
-# Learn more about conda-lockfiles: https://github.com/conda-incubator/conda-lockfiles
 
-conda install -n base conda-rattler-solver "conda-pypi>=0.8.0" conda-workspaces conda-forge::conda-lockfiles
+conda install --name base "conda-pypi>=0.8.0"
 
 # Create the conda environment from the environment.yml file
-conda env create --file environment.yml
+conda create --file environment.yml
 ```
 
 This will:
@@ -86,8 +89,6 @@ The setup script will:
 
 ### Package Management
 - **conda-pypi** (≥0.8.0) - PyPI wheel support in conda
-- **conda-rattler-solver** - Modern dependency resolver
-- **conda-lock** - Lock file generation for reproducibility
 - **Anaconda CLI** - Command-line tools for environment management
 
 ## ⚙️ Configuration
@@ -249,7 +250,7 @@ While Windows often uses a graphical .exe, you can perform a "silent" command-li
 
 ```powershell
 # Download and install silently
-Invoke-WebRequest -Uri "https://anaconda.com" -OutFile "miniconda.exe"
+Invoke-WebRequest -Uri "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe" -OutFile "miniconda.exe"
 Start-Process -FilePath .\miniconda.exe -ArgumentList "/S", "/D=$Env:UserProfile\Miniconda3" -Wait
 
 # Initialize PowerShell (Run as Administrator if needed)

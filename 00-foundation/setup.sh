@@ -245,8 +245,8 @@ verify_packages() {
     
     # Check MCP CLI
     print_info "Checking MCP CLI..."
-    if mcp --version &> /dev/null; then
-        print_success "MCP: $(mcp --version)"
+    if mcp version &> /dev/null; then
+        print_success "MCP: $(mcp version)"
     else
         print_warning "MCP CLI: may need installation"
     fi
@@ -262,7 +262,7 @@ display_summary() {
     echo -e "${GREEN}Your Data Foundations environment is ready!${NC}\n"
     
     echo -e "${BLUE}Environment Details:${NC}"
-    echo "  Environment Name: foundations"
+    echo "  Environment Name: foundation"
     echo "  Python Version: $(python --version 2>&1)"
     echo "  Conda Prefix: $CONDA_PREFIX"
     echo ""
@@ -276,7 +276,7 @@ display_summary() {
     echo -e "${BLUE}Next Steps:${NC}"
     echo "  1. Verify all packages: conda list"
     echo "  2. Test imports: python -c \"import langchain; print(langchain.__version__)\""
-    echo "  3. Check MCP: mcp --version"
+    echo "  3. Check MCP: mcp version"
     echo "  4. Explore demos: ls ../01-data-sources/"
     echo ""
     
@@ -317,7 +317,7 @@ main() {
     fi
 
     if [ "$MCP" = true ]; then
-        echo "Configuring Anconda MCP..."
+        echo "Configuring Anaconda MCP..."
     fi
     
     # Display summary
