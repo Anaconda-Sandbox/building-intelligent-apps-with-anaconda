@@ -177,7 +177,7 @@ The `evaluate` step runs assertion functions from `evals/assertions.py` — plai
 
 The DuckDB memory store (from the vector DB comparison: pgvector / MongoDB Atlas / Neo4j / **DuckDB** — embedded, portable, `conda-pack`-able) gives agents memory across runs: past `ValidationReport` results retrieved by cosine similarity and injected into the system prompt.
 
-Tools: Metaflow, LangGraph, Pydantic, DuckDB, `@catch`, `@card`
+Tools: LangGraph, Pydantic, DuckDB, Metaflow: FlowSpec, `@catch`, `@card`, `@conda`, `@retry`
 
 ---
 
