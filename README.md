@@ -18,21 +18,29 @@ Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star 
 
  PRE-LAUNCH         -1   MCP orientation        ~5 mins            talk to Anaconda tools before liftoff - requires Claude Desktop
  ────────────────────────────────────────────────────────────────────────────────
- CORE STACK         00   Foundation             ~1-3 mins          conda — the launch pad - build script
+ CORE STACK         00   Foundation*            ~1-3 mins          conda — the launch pad - build script
                     01   Data sources           ~1-3 mins          TESS photons → Python → ValidationReport - prerun notebook
-                    02   Your first agent       ~3 mins            one agent, one tool, one answer - build script
+                    02   Your first agent*      ~3 mins            one agent, one tool, one answer - build script
                     03   Multi-agent            ~5 mins            crew of agents, Metaflow orchestration - build script
  ────────────────────────────────────────────────────────────────────────────────
- DEEP SPACE         04   Deployment             ~3 mins            swap the LLM endpoint, keep the agents - prerun notebook
-                    05   GPU acceleration       UNKNOWN            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
+ DEEP SPACE         04   Deployment*            ~3 mins            swap the LLM endpoint, keep the agents - prerun notebook
+                    05   GPU acceleration*      UNKNOWN            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
                     06   App architecture       ~5-7 mins          harness, evals, vector memory, cards - build script
                     07   Mission critical       ~5 mins            CVEs, conda-lock, air-gap, AIBOM - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
  EXTRAVEHICULAR     08   Native apps            ~5-7 mins          PyScript (browser) + BeeWare (native) - build script
+                    09   Web app                ~1-3 mins          Panel app (browser) - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
  MISSION CONTROL    --   Example environment                       reference environment that would work for all of the modules
-                    --   README                                    YOURE HERE
+                    --   README                                    **YOURE HERE**
 ```
+All modules are optimized for GitHub codespaces for ease. Modules that cannot be completed in GH codespaces:
+*section #00 - mcp your environment requires Claude Desktop 
+*section 02 - your first agent, option B requires Anaconda Desktop 
+*section 04 - deployment and inference, option A requires Anaconda Desktop 
+*section 05 - gpu acceleration, requires Brev (paid service)
+*section 08 - native applications, option B: BeeWare builds native applications
+
 
 The payload — `ingestion.py` and `ValidationReport` — never changes. What changes is where it runs and what reasons about it.
 

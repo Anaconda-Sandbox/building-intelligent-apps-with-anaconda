@@ -1,7 +1,7 @@
 # 04 — Deployment and Inference
 
 **Estimated time:** ~3 minutes  
-**Prerequisites:** Completed `03-multi-agent-architecture` — the `LightcurveAnalysisFlow` and `analysis_agent.py` are the things being deployed here.
+**Optional Prerequisites:** Completed `03-multi-agent-architecture` — the `LightcurveAnalysisFlow` and `analysis_agent.py` are the things being deployed here.
 
 ---
 

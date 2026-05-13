@@ -1,10 +1,6 @@
 # 06 — App Architecture
 
-<<<<<<< HEAD
-**Estimated time:** 7 minutes
-=======
 **Estimated time:** ~5-7 minutes
->>>>>>> working
 **Prerequisites:** None — all dependencies are copied locally (Option B). See `agents/`, `evals/`, `vectordb/`, and `ingestion.py`.
 
 ---
