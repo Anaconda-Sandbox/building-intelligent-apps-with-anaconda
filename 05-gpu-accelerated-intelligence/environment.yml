@@ -1,7 +1,10 @@
 name: gpu-intelligence
 channels:
-  - conda-forge
+  - defaults
   - nvidia
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
   - conda-pypi
 dependencies:
   # Core Python
@@ -24,7 +27,6 @@ dependencies:
   - metaflow>=2.18
   - langgraph>=0.2
   # CUDA Python 1.0 — direct CUDA kernel access from Python
-  # Available via conda-forge and nvidia channels
   - cuda-python>=12.0
 
   # Some packages are only on PyPI —

@@ -1,6 +1,9 @@
 name: multi-agent
 channels:
-  - conda-forge
+  - defaults
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
   - conda-pypi
 dependencies:
   # Core Python
@@ -24,8 +27,7 @@ dependencies:
   - pydantic>=2.0
 
   # ── Orchestration ─────────────────────────────────────────────────────────────
-  # All available on conda-forge — no pip required.
-  # metaflow:        workflow orchestration, @conda step decorator sources from conda-forge
+  # metaflow:        workflow orchestration, @conda step decorator sources from defaults channel
   # langchain-core:  core LangChain abstractions
   # langchain-openai: OpenAI-compatible client integration
   # langgraph:       stateful multi-agent graph orchestration

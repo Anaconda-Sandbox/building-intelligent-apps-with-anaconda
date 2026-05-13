@@ -6,7 +6,7 @@ This guide provides cross-platform instructions for installing conda using comma
 
 ## 🚀 Quick Install (Choose One)
 
-### Option 1: conda-express (Modern & Fast) ⭐ Recommended
+### Option 1: conda-express (Modern & Fast) ⭐ Recommended, but experimental
 
 **conda-express** (`cx`) is a lightweight, single-binary bootstrapper for conda. It's the fastest way to get started with modern tooling:
 

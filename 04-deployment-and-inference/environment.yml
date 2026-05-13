@@ -1,6 +1,9 @@
 name: deployment-inference
 channels:
-  - conda-forge
+  - defaults
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
   - conda-pypi
 dependencies:
   - python=3.11
@@ -16,8 +19,6 @@ dependencies:
   - pydantic>=2.0
  
   # ── Inference stack ───────────────────────────────────────────────────────────
-  # All three confirmed on conda-forge — no pip section required.
-  #
   # openai:     OpenAI-compatible client — the portable contract for AI Navigator,
   #             vLLM, and Anaconda Platform Model Servers (inference_client.py)
   # anthropic:  Anthropic SDK — Claude Haiku fallback path
