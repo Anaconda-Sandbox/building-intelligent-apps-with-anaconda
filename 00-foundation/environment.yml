@@ -2,6 +2,7 @@ name: foundation
 channels:
   - main
   # - main-x  # New channel for pure wheels packages
+  - conda-pypi
   - conda-forge
 dependencies:
   # Core Python
@@ -9,40 +10,12 @@ dependencies:
 
   # Package management and lock files
   - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
+  - conda-lockfile
   - pipdeptree
 
-  # Development and utilities
-  - pip
-  - pytest>=7.0
-  - packaging
-  - unearth
+  # Jupyter notebook support
+  - ipykernel
 
-  # HTTP/2 and networking (for conda-pypi operations)
-  - h2
-  - httpx
-  - hishel
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
 
-  # Data handling
-  - msgpack-python
-  - typing-extensions
-  # - ipykernel
-
-  # Database support
-  - anysqlite
-  - pgvector
-
-  # LLM & AI Frameworks
-  - langchain
-  - llama-index
-  - pydantic>=2.0
-
-  # MCP (Model Context Protocol)
-  - mcp
-  - fastmcp
-
-  # Agent & Workflow Frameworks
-  - langgraph
-
-  # Async & HTTP utilities
-  - aiohttp
-  - python-dotenv

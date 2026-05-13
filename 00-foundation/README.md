@@ -5,24 +5,21 @@
 
 ---
 
-Welcome to the Foundation demo! This section sets up a complete environment for building intelligent applications with Python, including LLM frameworks, MCP servers, and agent orchestration tools.
+Welcome to the Foundation demo! This section sets starter environment for building intelligent applications with Python, including including new and experimental features from the conda ecosystem and Anaconda new products: `conda-pypi`, `conda-lockfiles`, `main-x`, `Anaconda CLI`, `rattler-solver`, 
 
 ## 🎯 What You'll Learn
 
 - Setting up a conda environment with modern Python package management
 - Configuring conda-pypi for PyPI wheel support
-- Initializing MCP (Model Context Protocol) servers
 - Lastest features in conda ecosystem, built by Anaconda and others!
-
-**Estimated completion time: 5-7 minutes**
 
 ## 📋 Prerequisites
 
-- Conda with Anaconda Ditro or Miniconda Distro 
+- Conda with Anaconda Ditro (view ToS) or Miniconda Distro (use conda-forge to avoid ToS)
     - Wizard download: ([Miniconda download here](https://www.anaconda.com/docs/getting-started/miniconda/install/overview)) | ([Anaonda download here](https://www.anaconda.com/docs/getting-started/miniconda/install/overview))
     - Jump to [Installing Conda from the command line](#installing-miniconda-from-the-command-line)
 - ~2GB disk space for dependencies
-- Python 3.10+
+- Python 3.11+ -- installed with conda environment creation
 
 ## 🚀 Quick Start
 
@@ -57,7 +54,7 @@ conda env create --file environment.yml
 ```
 
 This will:
-- Install Python 3.10+
+- Install Python 3.11+
 - Install LLM frameworks (LangChain, LlamaIndex, LangGraph)
 
 If you're starting from an [Anaconda Cloud notebook](https://nb.anaconda.com), you can use [Quick Start Environments](https://www.anaconda.com/products/navigator/quick-start-environments).
@@ -87,22 +84,6 @@ The setup script will:
 
 ## 📦 What's Installed
 
-### Core AI/LLM Frameworks
-- **LangChain** - LLM orchestration and agent frameworks
-- **LlamaIndex** - Data indexing and retrieval-augmented generation (RAG)
-- **LangGraph** - Stateful, multi-step agent workflows
-
-### MCP (Model Context Protocol)
-- **mcp** - Official MCP SDK for Python
-- **fastmcp** - Fast MCP server framework
-- **mcp-servers** - Pre-built MCP server implementations
-
-### Data & Infrastructure
-- **pgvector** - PostgreSQL vector database support
-- **Pydantic** (v2+) - Data validation and settings management
-- **aiohttp** - Async HTTP client/server
-- **python-dotenv** - Environment variable management
-
 ### Package Management
 - **conda-pypi** (≥0.8.0) - PyPI wheel support in conda
 - **conda-rattler-solver** - Modern dependency resolver
@@ -110,6 +91,8 @@ The setup script will:
 - **Anaconda CLI** - Command-line tools for environment management
 
 ## ⚙️ Configuration
+
+What happens in the build script and how to do it on your own.
 
 ### Setting Environment Variables
 
@@ -162,9 +145,6 @@ python -c "import llama_index; print(f'LlamaIndex: {llama_index.__version__}')"
 python -c "import langgraph; print('LangGraph: OK')"
 python -c "import mcp; print('MCP: OK')"
 python -c "import pydantic; print(f'Pydantic: {pydantic.__version__}')"
-
-# Check MCP version
-mcp --version
 
 # List all packages
 conda list
@@ -221,7 +201,7 @@ conda config --remove-key solver
 After completing this foundation setup, you'll be ready for:
 - **01-data-sources** - Working with data ingestion and RAG
 - **02-your-first-agent** - Building your first AI agent
-- **03-your-first-and-second-apps** - Creating production applications
+- **03-multi-agent-architecture** - Creating production applications
 - **04-deploying-cloud-and-inference** - Deploying to cloud platforms
 
 ## ❓ Troubleshooting
