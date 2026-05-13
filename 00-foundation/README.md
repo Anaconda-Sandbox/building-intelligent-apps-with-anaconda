@@ -45,7 +45,7 @@ conda config --show channels
 # If not, remove others with conda config --remove channels <CHANNEL NAME>
 
 # Update to the latest conda
-conda install --name base "conda>=26.3.2"
+conda install --name base "conda>=26.5.0"
 
 # Install experimental plugins in base
 # Learn more about conda-pypi: https://github.com/conda-incubator/conda-pypi-test
