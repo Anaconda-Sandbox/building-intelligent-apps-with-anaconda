@@ -1,14 +1,15 @@
 name: foundation
 channels: 
-  # - main-x # New channel for pure wheels packages
-  - defaults # Includes `main` channel plus msys2
-  - conda-forge
+  - defaults
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
+  - conda-pypi
 dependencies:
   # Core Python
   - python=3.11
 
   # Package management and lock files
-  - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
   - pipdeptree
 
   # Development and utilities

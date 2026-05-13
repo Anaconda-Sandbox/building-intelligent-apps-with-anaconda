@@ -35,6 +35,7 @@ dependencies:
   # Best practice is to treat them as fast moving, less secure dependencies.
   #
   # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
-  #   conda pypi install vllm openai
-  # It converts wheels to .conda format and respects conda's solver.
-  # Watch: https://conda.org/blog/conda-roadmap-q1-2026/
+  #   conda install anthropic openai
+  # Installs them natively as wheels alongside conda packages 
+  # (supporting pure Python wheels as a first class citizen/artifact in conda envs)
+  # Learn more: https://conda.github.io/conda-pypi/quickstart/

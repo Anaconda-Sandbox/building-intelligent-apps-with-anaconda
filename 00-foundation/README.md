@@ -26,7 +26,7 @@ Welcome to the Foundation demo! This section sets starter environment for buildi
 ### Step 1: Create the Environment
 
 ```bash
-# Check youre using conda 26.3.2 if not the correct version, go to #installing-miniconda-from-the-command-line
+# Check youre using conda 26.5.0 if not the correct version, go to #installing-miniconda-from-the-command-line
 conda --version
 
 # Navigate to the foundation directory
@@ -48,9 +48,9 @@ conda config --show channels
 conda install --name base "conda>=26.5.0"
 
 # Install experimental plugins in base
-# Learn more about conda-pypi: https://github.com/conda-incubator/conda-pypi-test
+# Learn more about conda-pypi: https://conda.github.io/conda-pypi/quickstart/
 
-conda install --name base "conda-pypi>=0.8.0"
+conda install --name base "conda-pypi>=0.9.0"
 
 # Create the conda environment from the environment.yml file
 conda create --file environment.yml
@@ -58,7 +58,8 @@ conda create --file environment.yml
 
 This will:
 - Install Python 3.11+
-- Install LLM frameworks (LangChain, LlamaIndex, LangGraph)
+- Enable new, native multi-file lockfiles or save and share them, respectively
+- Enable rattler-solver, the faster rust-based solver leaning into the exciting requests from the ecosystem. All new features will come through this new solver and will be come default
 
 If you're starting from an [Anaconda Cloud notebook](https://nb.anaconda.com), you can use [Quick Start Environments](https://www.anaconda.com/products/navigator/quick-start-environments).
 
@@ -75,7 +76,7 @@ conda activate foundation
 chmod +x setup.sh
 
 # Run the setup script with flags for conda experimental set up, try the new anaconda cli and try the new Anaconda MCP server
-bash setup.sh --conda --anaconda --mcp
+bash setup.sh --conda --anaconda
 ```
 
 The setup script will:
@@ -88,7 +89,7 @@ The setup script will:
 ## 📦 What's Installed
 
 ### Package Management
-- **conda-pypi** (≥0.8.0) - PyPI wheel support in conda
+- **conda-pypi** (≥0.9.0) - PyPI wheel support in conda
 - **Anaconda CLI** - Command-line tools for environment management
 
 ## ⚙️ Configuration
@@ -103,7 +104,6 @@ The setup script creates a configuration directory. You can add a `.env` file:
 # Create a .env file in your project root
 cat > .env << 'EOF'
 PYTHONPATH=${CONDA_PREFIX}/lib:$PYTHONPATH
-MCP_CONFIG=${CONDA_PREFIX}/etc/mcp
 LOG_LEVEL=INFO
 EOF
 
@@ -122,7 +122,7 @@ conda config --show solver
 
 You should see: `solver: rattler`
 
-### Adding the conda-pypi-test Channel
+### Adding the conda-pypi Channel
 
 The setup script adds the test channel. To verify:
 
@@ -130,7 +130,7 @@ The setup script adds the test channel. To verify:
 conda config --show channels
 ```
 
-You should see the conda-pypi-test channel listed.
+You should see the conda-pypi channel listed.
 
 ## 🧪 Verify Installation
 
@@ -144,7 +144,6 @@ python --version
 python -c "import langchain; print(f'LangChain: {langchain.__version__}')"
 python -c "import llama_index; print(f'LlamaIndex: {llama_index.__version__}')"
 python -c "import langgraph; print('LangGraph: OK')"
-python -c "import mcp; print('MCP: OK')"
 python -c "import pydantic; print(f'Pydantic: {pydantic.__version__}')"
 
 # List all packages
@@ -169,15 +168,13 @@ If you prefer to configure manually without running the setup script:
 # 1. Configure the solver
 conda config --set solver rattler
 
-# 2. Add the conda-pypi-test channel
-conda config --append channels https://github.com/conda-incubator/conda-pypi-test/releases/download
+# 2. Add the conda-pypi channel
+conda config --append channels conda-pypi
 
 # 3. Set environment variables (add to ~/.bashrc or ~/.zshrc)
 export PYTHONPATH="${CONDA_PREFIX}/lib:$PYTHONPATH"
-export MCP_CONFIG="${CONDA_PREFIX}/etc/mcp"
 
 # 4. Create required directories
-mkdir -p "${CONDA_PREFIX}/etc/mcp"
 mkdir -p "${CONDA_PREFIX}/var/log"
 ```
 
@@ -193,7 +190,7 @@ conda deactivate
 conda env remove --name foundation
 
 # (Optional) Remove the channels and revert solver
-conda config --remove channels https://github.com/conda-incubator/conda-pypi-test/releases/download
+conda config --remove channels conda-pypi
 conda config --remove-key solver
 ```
 
@@ -212,9 +209,6 @@ After completing this foundation setup, you'll be ready for:
 
 ### Issue: ModuleNotFoundError for LangChain or LlamaIndex
 **Solution:** Verify the environment is activated: `conda activate foundation`
-
-### Issue: MCP command not found
-**Solution:** Reinstall the mcp package: `conda install mcp -y`
 
 ### Issue: pgvector not installing
 **Solution:** pgvector requires PostgreSQL dev headers. Install with: `conda install libpq -y`

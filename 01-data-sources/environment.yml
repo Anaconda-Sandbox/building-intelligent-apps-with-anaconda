@@ -31,3 +31,13 @@ dependencies:
 
   # ── Utilities ─────────────────────────────────────────────────────────────────
   - python-dotenv   # used in setup patterns across the curriculum
+
+  # Some packages are only on PyPI —
+  # they move faster than conda-forge packaging can keep up.
+  # Best practice is to treat them as fast moving, less secure dependencies.
+  #
+  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+  #   conda install anthropic openai
+  # Installs them natively as wheels alongside conda packages 
+  # (supporting pure Python wheels as a first class citizen/artifact in conda envs)
+  # Learn more: https://conda.github.io/conda-pypi/quickstart/
