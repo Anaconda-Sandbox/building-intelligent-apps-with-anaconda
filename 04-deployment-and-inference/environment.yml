@@ -1,19 +1,40 @@
 name: deployment-inference
 channels:
-  - conda-forge
   - defaults
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
+  - conda-pypi
 dependencies:
   - python=3.11
-  - polars>=1.0
-  - pydantic>=2.0
-  - numpy>=1.26
-  - jupyter>=1.0
+ 
+  # ── Jupyter ───────────────────────────────────────────────────────────────────
   - ipykernel
-  - pip
-  - pip:
-    # OpenAI-compatible client — works with AI Navigator, vLLM, and Anaconda Platform
-    - openai>=1.30
-    # Anthropic client — for Claude Haiku fallback (used in Module 03)
-    - anthropic>=0.40
-    # LangGraph — agent framework from Module 03
-    - langgraph>=0.2
+  - jupyterlab
+ 
+  # ── Data pipeline ─────────────────────────────────────────────────────────────
+  # Inherited from Modules 01-03 via inference_client.py and agent imports.
+  - polars>=1.0
+  - numpy>=1.26
+  - pydantic>=2.0
+ 
+  # ── Inference stack ───────────────────────────────────────────────────────────
+  # openai:     OpenAI-compatible client — the portable contract for AI Navigator,
+  #             vLLM, and Anaconda Platform Model Servers (inference_client.py)
+  # anthropic:  Anthropic SDK — Claude Haiku fallback path
+  # langgraph:  Agent framework from Module 03, imported by flow steps
+  - openai>=1.30
+  - anthropic
+  - langgraph
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
+
+  # Some packages are only on PyPI —
+  # they move faster than conda-forge packaging can keep up.
+  # Best practice is to treat them as fast moving, less secure dependencies.
+  #
+  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+  #   conda pypi install vllm openai
+  # It converts wheels to .conda format and respects conda's solver.
+  # Watch: https://conda.org/blog/conda-roadmap-q1-2026/

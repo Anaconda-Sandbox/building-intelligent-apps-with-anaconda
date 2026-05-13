@@ -1,6 +1,6 @@
 # 08 — Native Apps
 
-**Estimated time:** Under 7 minutes per option  
+**Estimated time:** ~5-7 minutes per option  
 **Prerequisites:** None beyond Module 01 — this is a standalone addendum showing the pipeline delivered in new contexts.
 
 ---

@@ -1,6 +1,13 @@
-# AI Navigator — Local Inference
+# 04 - Deployment and Inference
+ 
+**Estimated time:** 7 minutes
+**Prerequisites:** 03-multi-agent-architecture
+ 
+---
 
 AI Navigator is Anaconda's desktop application for running open-source LLMs locally. It manages model downloads, quantization selection, and exposes an API server you can call from your code.
+
+**Anaconda Desktop** is the next generation — it adds secure local model deployment, an integrated chat interface, environment management, and Anaconda Platform integration alongside the same inference server capabilities. Currently available through a limited early access program; AI Navigator covers the same inference use case today.
 
 **When to use this:** Development and prototyping. No API key, no cloud bill, no network dependency. Models run on your machine using CPU + RAM + VRAM.
 

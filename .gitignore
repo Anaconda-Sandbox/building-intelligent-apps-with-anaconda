@@ -9,6 +9,11 @@ build/
 *.egg
 *.log
 *.ipynb_checkpoints
-.env/
+.env
 Miniconda3.sh
 =*
+.metaflow/
+*.tar.gz
+memory/*.duckdb
+TODO.md
+.conda/

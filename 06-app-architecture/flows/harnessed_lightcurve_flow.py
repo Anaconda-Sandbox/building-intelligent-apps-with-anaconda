@@ -69,13 +69,28 @@ class HarnessedLightcurveFlow(FlowSpec):
         """
         from pathlib import Path
         import sys, os
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
         try:
             from ingestion import load_lightcurve, validate_lightcurve, SCHEMA
-            data_file = Path(f"{self.input}_lightcurve.csv")
+            # Look for the CSV relative to the module root (one level up from flows/)
+            module_root = Path(os.path.dirname(__file__)).parent
+            repo_root   = module_root.parent
+            data_file = module_root / f"{self.input}_lightcurve.csv"
             if not data_file.exists():
-                data_file = Path("wasp18b_lightcurve.csv")
+                # Standard repo location
+                data_file = repo_root / "01-data-sources" / "wasp18b_lightcurve.csv"
+            if not data_file.exists():
+                # Local wasp18b fallback (committed to module root)
+                data_file = module_root / "wasp18b_lightcurve.csv"
+            if not data_file.exists():
+                # Submodule fallback
+                data_file = repo_root / "100-example-applications" / "polars_demo" / "wasp18b_lightcurve.csv"
+            if not data_file.exists():
+                raise FileNotFoundError(
+                    f"Cannot find lightcurve CSV for target '{self.input}'. "
+                    f"Run: git submodule update --init --recursive"
+                )
             df = load_lightcurve(data_file, SCHEMA)
             self.report = validate_lightcurve(df)
         except Exception:
@@ -115,7 +130,7 @@ class HarnessedLightcurveFlow(FlowSpec):
             return
 
         import os, sys
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
         from agents.analysis_agent import run_analysis_agent
         from vectordb.memory_store import AgentMemoryStore
 
@@ -133,11 +148,16 @@ class HarnessedLightcurveFlow(FlowSpec):
         )
         memory_context = store.format_context(similar)
 
-        # ── Run the agent, injecting memory context into the prompt ──────────
+        # ── Run the agent with LangGraph checkpointing ───────────────────────
+        # thread_id scopes the MemorySaver checkpoint to this specific
+        # Metaflow task (target + run_id). On @retry, the same thread_id
+        # lets LangGraph resume mid-reasoning from the last superstep
+        # rather than restarting the full agent loop.
         self.result = run_analysis_agent(
             report=self.report,
             memory_context=memory_context,
             verbose=False,
+            thread_id=f"{self.input}_{current.run_id}",
         )
 
         # ── Store this result for future runs ─────────────────────────────────

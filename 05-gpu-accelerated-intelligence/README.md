@@ -1,7 +1,7 @@
 # 05 — GPU-Accelerated Intelligence
 
-**Estimated time:** 7 minutes  
-**Prerequisites:** Completed `03-multi-agent-architecture` — the WASP-18 b pipeline and LangGraph + Metaflow patterns carry forward here unchanged.
+**Estimated time:** UNKNOWN (EXPERIMENTAL)  
+**Optional Prerequisites:** Completed `03-multi-agent-architecture` — the WASP-18 b pipeline and LangGraph + Metaflow patterns carry forward here unchanged.
 
 ---
 
@@ -55,7 +55,7 @@ The agent code doesn't change. The environment does.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Brev** — NVIDIA's GPU provisioning platform. Not a Python library. Use the CLI or web console to get a GPU instance, then SSH or JupyterLab in. The environment comes with CUDA, Python, and Docker preconfigured.
+**Brev** — NVIDIA's GPU provisioning platform. Not a Python library. Use the CLI or web console to get a GPU instance, then SSH or JupyterLab in. The environment comes with CUDA, Python, and Docker preconfigured. Brev requires credit card to un this demo.
 
 **NemoClaw** — NVIDIA's open-source sandboxed agent runtime (alpha). A TypeScript CLI plugin + Python blueprint built on OpenShell. It controls what your agent can see, do, and where its inference requests go. You interact with it via `nemoclaw` commands, not Python imports.
 
@@ -69,13 +69,18 @@ The agent code doesn't change. The environment does.
 
 ### 1. Provision a Brev GPU instance
 
+brev login will prompt you to create your account if you don't already have one associated with your provided email address.
+
 ```bash
 # Install Brev CLI
 curl -sL https://raw.githubusercontent.com/brevdev/brev-cli/main/bin/install-latest.sh | sudo bash
 brev login
 
 # Create an L40S instance (sufficient for Nemotron 3 Nano)
-brev create wasp18b-gpu --gpu L40S
+# Or specify an exact instance type directly `brev create wasp18b-gpu --type g6e.xlarge`
+# Or let smart defaults pick for you (≥20GB VRAM, cheapest first) `brev create wasp18b-gpu`
+brev create wasp18b-gpu --gpu-name L40S --min-vram 40
+
 brev shell wasp18b-gpu
 ```
 

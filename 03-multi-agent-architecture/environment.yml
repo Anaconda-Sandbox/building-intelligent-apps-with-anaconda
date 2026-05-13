@@ -1,16 +1,49 @@
-name: first-agent
+name: multi-agent
 channels:
-  - conda-forge
   - defaults
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
+  - conda-pypi
 dependencies:
+  # Core Python
   - python=3.11
-  - pip
-  - numpy
-  - polars
-  - scikit-learn
+
+  # ── Package management and lock files  ────────────────────────────────────────
+  #  Move from conda-lock to conda-lockfile in base environment 
+  - conda-lockfile  #  Reproducible cross-platform lock files
+  - pipdeptree
+
+  # ── Jupyter ───────────────────────────────────────────────────────────────────
+  # Required to open the notebook and register this env as a Jupyter kernel.
+  - ipykernel
+  - jupyterlab
+
+  # ── Data pipeline ─────────────────────────────────────────────────────────────
+  # Inherited from Modules 01 and 02 — agent_tools.py imports all of these.
+  - polars>=1.0
+  - numpy>=1.26
+  - scikit-learn>=1.4
   - pydantic>=2.0
-  - python-dotenv
-  - pip:
-    - langchain-openai
-    - langchain-core
-    - langgraph>=0.2
+
+  # ── Orchestration ─────────────────────────────────────────────────────────────
+  # metaflow:        workflow orchestration, @conda step decorator sources from defaults channel
+  # langchain-core:  core LangChain abstractions
+  # langchain-openai: OpenAI-compatible client integration
+  # langgraph:       stateful multi-agent graph orchestration
+  - metaflow>=2.18
+  - langchain-core
+  - langchain-openai
+  - langgraph
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
+
+  # Some packages are only on PyPI —
+  # they move faster than conda-forge packaging can keep up.
+  # Best practice is to treat them as fast moving, less secure dependencies.
+  #
+  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+  #   conda pypi install vllm openai
+  # It converts wheels to .conda format and respects conda's solver.
+  # Watch: https://conda.org/blog/conda-roadmap-q1-2026/

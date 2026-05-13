@@ -1,0 +1,33 @@
+name: data-foundations
+channels:
+  - defaults
+  - main-x  # New channel for pure wheels packages
+  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
+  - conda-pypi
+dependencies:
+  # Core Python
+  - python=3.11
+  
+  # ── Jupyter ───────────────────────────────────────────────────────────────────
+  # ipykernel registers this environment as a selectable Jupyter kernel.
+  # Without it, `jupyter lab` can't find the env and throws the ipykernel error.
+  # jupyterlab is the interface; ipykernel is the bridge between it and Python.
+  - ipykernel
+  - jupyterlab
+
+  # ── Data pipeline ─────────────────────────────────────────────────────────────
+  # Everything the notebook and ingestion.py actually import.
+  # polars        → load_lightcurve(), feature engineering
+  # numpy         → IsolationForest features, rolling window arrays
+  # matplotlib    → light curve and anomaly plots
+  # scikit-learn  → IsolationForest anomaly detection
+  # pydantic      → ValidationReport, LightcurveSchema
+  - polars>=1.0
+  - numpy>=1.26
+  - matplotlib>=3.8
+  - scikit-learn>=1.4
+  - pydantic>=2.0
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum

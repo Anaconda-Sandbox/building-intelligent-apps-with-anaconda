@@ -1,7 +1,7 @@
 # 07 — Mission-Critical Infrastructure
 
-**Estimated time:** 7 minutes  
-**Prerequisites:** `06-app-architecture` — the `HarnessedLightcurveFlow` is deployed here unchanged.
+**Estimated time:** ~5 minutes  
+**Optional Prerequisites:** `06-app-architecture` — the `HarnessedLightcurveFlow` is deployed here unchanged.
 
 ---
 
