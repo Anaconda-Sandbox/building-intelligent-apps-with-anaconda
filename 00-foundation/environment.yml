@@ -1,48 +1,31 @@
 name: foundation
-channels: 
-  # - main-x # New channel for pure wheels packages
-  - defaults # Includes `main` channel plus msys2
+channels:
   - conda-forge
+  - conda-pypi
 dependencies:
   # Core Python
   - python=3.11
 
-  # Package management and lock files
-  - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
+  # ── Package management and lock files  ────────────────────────────────────────
+  #  Move from conda-lock to conda-lockfile in base environment 
+  - conda-lockfile  #  Reproducible cross-platform lock files
   - pipdeptree
 
-  # Development and utilities
-  - pip
-  - pytest>=7.0
-  - packaging
-  - unearth
+  # ── Jupyter ───────────────────────────────────────────────────────────────────
+  # ipykernel registers this environment as a selectable Jupyter kernel.
+  # Without it, `jupyter lab` can't find the env and throws the ipykernel error.
+  # jupyterlab is the interface; ipykernel is the bridge between it and Python.
+  - ipykernel
+  - jupyterlab
 
-  # HTTP/2 and networking (for conda-pypi operations)
-  - h2
-  - httpx
-  - hishel
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
 
-  # Data handling
-  - msgpack-python
-  - typing-extensions
-  # - ipykernel
-
-  # Database support
-  - anysqlite
-  - pgvector
-
-  # LLM & AI Frameworks
-  - langchain
-  - llama-index
-  - pydantic>=2.0
-
-  # MCP (Model Context Protocol)
-  - mcp
-  - fastmcp
-
-  # Agent & Workflow Frameworks
-  - langgraph
-
-  # Async & HTTP utilities
-  - aiohttp
-  - python-dotenv
+  # Some packages are only on PyPI —
+  # they move faster than conda-forge packaging can keep up.
+  # Best practice is to treat them as fast moving, less secure dependencies.
+  #
+  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+  #   conda pypi install vllm openai
+  # It converts wheels to .conda format and respects conda's solver.
+  # Watch: https://conda.org/blog/conda-roadmap-q1-2026/

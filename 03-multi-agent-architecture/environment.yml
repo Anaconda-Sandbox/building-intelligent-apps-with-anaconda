@@ -1,9 +1,15 @@
 name: multi-agent
 channels:
   - conda-forge
-  - defaults
+  - conda-pypi
 dependencies:
+  # Core Python
   - python=3.11
+
+  # ── Package management and lock files  ────────────────────────────────────────
+  #  Move from conda-lock to conda-lockfile in base environment 
+  - conda-lockfile  #  Reproducible cross-platform lock files
+  - pipdeptree
 
   # ── Jupyter ───────────────────────────────────────────────────────────────────
   # Required to open the notebook and register this env as a Jupyter kernel.
@@ -16,7 +22,6 @@ dependencies:
   - numpy>=1.26
   - scikit-learn>=1.4
   - pydantic>=2.0
-  - python-dotenv
 
   # ── Orchestration ─────────────────────────────────────────────────────────────
   # All available on conda-forge — no pip required.
@@ -24,9 +29,19 @@ dependencies:
   # langchain-core:  core LangChain abstractions
   # langchain-openai: OpenAI-compatible client integration
   # langgraph:       stateful multi-agent graph orchestration
-  # ragas:           agent output evaluation — Faithfulness, AnswerRelevancy, ContextRelevance
   - metaflow>=2.18
   - langchain-core
   - langchain-openai
   - langgraph
-  - ragas
+
+  # ── Utilities ─────────────────────────────────────────────────────────────────
+  - python-dotenv   # used in setup patterns across the curriculum
+
+  # Some packages are only on PyPI —
+  # they move faster than conda-forge packaging can keep up.
+  # Best practice is to treat them as fast moving, less secure dependencies.
+  #
+  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+  #   conda pypi install vllm openai
+  # It converts wheels to .conda format and respects conda's solver.
+  # Watch: https://conda.org/blog/conda-roadmap-q1-2026/
