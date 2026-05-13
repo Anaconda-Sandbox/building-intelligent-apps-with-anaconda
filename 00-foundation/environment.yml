@@ -1,9 +1,9 @@
 name: foundation
 channels:
-  - main
+  - conda-forge
+  - defaults
   # - main-x  # New channel for pure wheels packages
   - conda-pypi
-  - conda-forge
 dependencies:
   # Core Python
   - python=3.11
