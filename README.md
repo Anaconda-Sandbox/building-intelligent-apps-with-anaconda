@@ -24,7 +24,7 @@ Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star 
                     03   Multi-agent            ~5 mins            crew of agents, Metaflow orchestration - build script
  ────────────────────────────────────────────────────────────────────────────────
  DEEP SPACE         04   Deployment             ~3 mins            swap the LLM endpoint, keep the agents - prerun notebook
-                    05   GPU acceleration       ~5 mins            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
+                    05   GPU acceleration       UNKNOWN            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
                     06   App architecture       ~5-7 mins          harness, evals, vector memory, cards - build script
                     07   Mission critical       ~5 mins            CVEs, conda-lock, air-gap, AIBOM - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
@@ -95,6 +95,7 @@ Tools: `LangGraph`, `Anthropic` or `openai` client
 
 ### `03` — Multi-Agent Architecture: Assemble the Crew
 **Two agents, one supervisor, `foreach` parallelism across 50 targets.**
+Time: ~5 minutes
 
 `DataAgent` and `AnalysisAgent` fly in formation, coordinated by a LangGraph supervisor. Metaflow wraps the whole operation as a `FlowSpec` — each agent role gets its own isolated, lockable environment. A dependency conflict between Polars and LangGraph is structurally impossible.
 
@@ -110,6 +111,7 @@ Tools: `LangGraph`, `Metaflow` 2.18+, `FlowSpec`
 
 ### `04` — Deployment and Inference: Mission Control Endpoints
 **Three LLM targets, one agent interface, zero code changes.**
+Time: ~3 minutes
 
 The agents from Module 03 call an LLM via the `openai` client. That client points at a URL. This module shows what lives at the URL — and proves that swapping it is a one-line env var change.
 
@@ -129,6 +131,7 @@ Tools: vLLM, Anaconda Platform Model Servers, `inference_client.py`
 
 ### `05` — GPU-Accelerated Intelligence: Afterburners
 **Same pipeline. NVIDIA iron. 47× faster feature engineering.**
+Time: UNKNOWN - experimental
 
 The Module 03 flow gets a CUDA upgrade. `compute_features` moves from Polars CPU rolling windows to a CUDA Python 1.0 kernel. The LLM switches from Claude Haiku to Nemotron 3 Nano on vLLM via Brev. The agents don't know any of this happened.
 
