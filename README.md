@@ -352,5 +352,13 @@ Target Audience: Software Engineers, AI Developers, ML Engineers, Data Scientist
 Resource Type: Show
 Metrics: Stars, forks, completions
 
+## 🐛 See a problem?
+
+Something broken, unclear, or out of date? Open an issue — bug reports and improvement suggestions both welcome.
+
+- **[Report a bug](../../issues/new?template=bug_report.md)** — broken code, failed environment, incorrect output
+- **[Request a feature or improvement](../../issues/new?template=feature_request.md)** — missing content, unclear docs, module ideas
+
+
 # License
 MIT License - see LICENSE file for details.
