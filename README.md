@@ -1,8 +1,8 @@
 # 🚀 Building Intelligent Apps with Anaconda
 
-> **Mission status: WIP — PyCon US 2026, Long Beach, May 14–22**
+> **Mission status: Ready for lift-off**
 
-A hands-on curriculum for building production-grade intelligent applications with the Anaconda ecosystem. Every module is a self-contained 7-minute narrated demo with pre-run outputs — designed to show the code and the decisions, not walk you through setup.
+A hands-on curriculum for building production-grade intelligent applications with the Anaconda ecosystem. Every module is a self-contained < 7-minute narrated demo with pre-run outputs or script `run_demo.sh` — designed to show the code and the decisions, not walk you through setup.
 
 Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star by NASA's TESS telescope. We process its light curve, build agents to reason about it, deploy those agents to production, secure the supply chain, and ship the result — to a browser tab, to a native app, to an air-gapped server 800km away. Same data. Every module.
 
@@ -16,22 +16,22 @@ Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star 
                      │  a hot Jupiter 1,300 light-years from home  │
                      └─────────────────────────────────────────────┘
 
- PRE-LAUNCH         -1   MCP orientation     talk to Anaconda tools before liftoff
+ PRE-LAUNCH         -1   MCP orientation        ~5 mins            talk to Anaconda tools before liftoff - requires Claude Desktop
  ────────────────────────────────────────────────────────────────────────────────
- CORE STACK         00   Foundation          conda — the launch pad
-                    01   Data sources        TESS photons → Python → ValidationReport
-                    02   Your first agent    one agent, one tool, one answer
-                    03   Multi-agent         crew of agents, Metaflow orchestration
+ CORE STACK         00   Foundation             ~1-3 mins          conda — the launch pad - build script
+                    01   Data sources           ~1-3 mins          TESS photons → Python → ValidationReport - prerun notebook
+                    02   Your first agent       ~3 mins            one agent, one tool, one answer - build script
+                    03   Multi-agent            ~5 mins            crew of agents, Metaflow orchestration - build script
  ────────────────────────────────────────────────────────────────────────────────
- DEEP SPACE         04   Deployment          swap the LLM endpoint, keep the agents
-                    05   GPU acceleration    Nemotron on NVIDIA iron, 47× faster
-                    06   App architecture    harness, evals, vector memory, cards
-                    07   Mission critical    CVEs, conda-lock, air-gap, AIBOM
+ DEEP SPACE         04   Deployment             ~3 mins            swap the LLM endpoint, keep the agents - prerun notebook
+                    05   GPU acceleration       ~5 mins            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
+                    06   App architecture       ~5-7 mins          harness, evals, vector memory, cards - build script
+                    07   Mission critical       ~5 mins            CVEs, conda-lock, air-gap, AIBOM - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
- EXTRAVEHICULAR     08   Native apps         PyScript (browser) + BeeWare (native)
+ EXTRAVEHICULAR     08   Native apps            ~5-7 mins          PyScript (browser) + BeeWare (native) - build script
  ────────────────────────────────────────────────────────────────────────────────
- MISSION CONTROL   100   Example apps        full reference implementations
-                   101   Reference library   decision guides, best practices
+ MISSION CONTROL    --   Example environment                       reference environment that would work for all of the modules
+                    --   README                                    YOURE HERE
 ```
 
 The payload — `ingestion.py` and `ValidationReport` — never changes. What changes is where it runs and what reasons about it.
