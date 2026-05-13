@@ -161,6 +161,7 @@ Tools: Brev, CUDA Python 1.0, vLLM, Nemotron 3 Nano (BF16), NemoClaw
 
 ### `06` — App Architecture: Mission Hardening
 **The pipeline that keeps flying when things go wrong.**
+Time: ~5-7 minutes
 
 Module 03's flow works on good data with a responsive LLM. This module adds four additive patterns that keep it running in production:
 
@@ -181,7 +182,7 @@ Tools: LangGraph, Pydantic, DuckDB, Metaflow: FlowSpec, `@catch`, `@card`, `@con
 
 ---
 
-### `07` — Mission-Critical Infrastructure: No Failures Tolerated
+### `07` — Mission-Critical Infrastructure: No Failures Tolerated"
 **Prove the environment is safe before it flies.**
 
 Supply chain security isn't a feature you add at the end. It's the infrastructure the pipeline runs on. Five layers, zero pipeline code changes:
