@@ -1,10 +1,11 @@
 name: data-foundations
 channels:
   - conda-forge
-  - defaults
+  - conda-pypi
 dependencies:
- # Core Python
+  # Core Python
   - python=3.11
+  
   # ── Jupyter ───────────────────────────────────────────────────────────────────
   # ipykernel registers this environment as a selectable Jupyter kernel.
   # Without it, `jupyter lab` can't find the env and throws the ipykernel error.

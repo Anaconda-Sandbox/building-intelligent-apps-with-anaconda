@@ -1,13 +1,14 @@
 name: building-ia
 channels:
-  - defaults
   - conda-forge
+  - conda-pypi
 dependencies:
   # Core Python
   - python=3.11
 
   # Package management and lock files
-  - conda-lockfile #  Move from conda-lock to conda-lockfile in base environment
+  # Move from conda-lock to conda-lockfile in base environment 
+  - conda-lockfile  #  Reproducible cross-platform lock files
   - pipdeptree
 
   # Development and utilities
@@ -15,7 +16,7 @@ dependencies:
   - packaging
   - unearth
 
-  # HTTP/2 and networking (for conda-pypi operations)
+  # HTTP/2 and networking
   - h2
   - httpx
   - hishel
@@ -47,3 +48,6 @@ dependencies:
   # Panel App
   - panel
   - panel-material-ui
+
+  # Utilities
+  - python-dotenv 
