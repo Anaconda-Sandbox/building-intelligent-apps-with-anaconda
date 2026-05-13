@@ -6,9 +6,11 @@ A hands-on curriculum for building production-grade intelligent applications wit
 
 Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star by NASA's TESS telescope. We process its light curve, build agents to reason about it, deploy those agents to production, secure the supply chain, and ship the result — to a browser tab, to a native app, to an air-gapped server 800km away. Same data. Every module.
 
+(Looking for conda-forge optimized environments? check out the `conda-forge` branch of this repository.)
+
 ---
 
-## 🌌 Mission arc
+## 🌌 Mission arc: 
 
 ```
                      ┌─────────────────────────────────────────────┐
