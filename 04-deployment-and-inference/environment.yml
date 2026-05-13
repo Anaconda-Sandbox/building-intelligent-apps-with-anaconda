@@ -1,9 +1,8 @@
 name: deployment-inference
 channels:
-  - defaults
-  - main-x  # New channel for pure wheels packages
-  # self-hosted channels should go last to allow defaults and main-x to satisfy as many dependencies as possible
-  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
+  - conda-forge
+  # conda-pypi is a new beta feature in conda 26.5.0, and you need to opt in first to use this channel
+  # Learn more: https://conda.github.io/conda-pypi/quickstart/
   - conda-pypi
 dependencies:
   - python=3.11
@@ -19,6 +18,8 @@ dependencies:
   - pydantic>=2.0
  
   # ── Inference stack ───────────────────────────────────────────────────────────
+  # All three confirmed on conda-forge — no pip section required.
+  #
   # openai:     OpenAI-compatible client — the portable contract for AI Navigator,
   #             vLLM, and Anaconda Platform Model Servers (inference_client.py)
   # anthropic:  Anthropic SDK — Claude Haiku fallback path
@@ -34,7 +35,7 @@ dependencies:
   # they move faster than conda-forge packaging can keep up.
   # Best practice is to treat them as fast moving, less secure dependencies.
   #
-  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
-  #   conda pypi install vllm openai
-  # It converts wheels to .conda format and respects conda's solver.
-  # Watch: https://conda.org/blog/conda-roadmap-q1-2026/
+  # conda-pypi (beta feature in conda 26.5.0) is the safer long-term answer:
+  #   conda install openai
+  # It enables conda to install pure Python wheels from PyPI natively.
+  # Learn more: https://conda.github.io/conda-pypi/quickstart/
