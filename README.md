@@ -42,6 +42,7 @@ The payload — `ingestion.py` and `ValidationReport` — never changes. What ch
 
 ### `-1` — MCP: Pre-flight Checklist
 **Make sure ground control can hear you.**
+Time: ~5 minutes 
 
 The Model Context Protocol is how AI assistants talk to Anaconda tools. Before the first `conda install`, verify your MCP setup so Claude Desktop can manage environments, query packages, and inspect CVEs on your behalf.
 
@@ -51,21 +52,17 @@ Tools: `anaconda-mcp`, Claude Desktop
 
 ### `00` — Foundation: The Launch Pad
 **You can't reach orbit without a stable platform.**
+Time: ~1-3 minutes
 
-Every agent, every pipeline step, every GPU kernel in this curriculum runs inside a conda environment. This module makes that concrete: why conda over pip alone, how environment isolation works, and the tools that turn a fleeting `pip install` into a reproducible, lockable, shippable artifact.
+Every agent, every pipeline step, every GPU kernel in this curriculum runs inside a conda environment. This module makes that concrete: why conda, how environment isolation works, and the tools that turn a fleeting `pip install` into a reproducible, lockable, shippable artifact.
 
-```bash
-conda create -n mission python=3.11
-conda activate mission
-conda-lock -f environment.yml -p linux-64   # lock for reproducibility
-```
-
-Tools: `conda`, `conda-lock`, `conda-forge`, `pixi`, Anaconda Distribution
+Tools: `conda`, `conda-pypi` (experimental), `conda-forge`, Anaconda Distribution
 
 ---
 
 ### `01` — Data Sources: First Contact
 **Raw photons from 1,300 light-years away, cleaned up and ready for agents.**
+Time: ~1-3 minutes
 
 Built on Daina Bouquin's [polars_demo](https://github.com/dbouquin/polars_demo) — a real TESS phase-folded light curve of WASP-18 b, a hot Jupiter completing an orbit every 22 hours. We extend it into a production-ready pipeline: schema enforcement, Pydantic validation, IsolationForest anomaly detection, and the `ValidationReport` that every subsequent module consumes.
 
@@ -80,36 +77,34 @@ The three columns that travel through the entire curriculum.
 - IsolationForest — transit anomaly detection without labelled data
 - `agent_context` — the structured payload that becomes Module 02's agent input
 
-Tools: Polars, scikit-learn, Pydantic, `ingestion.py`
+Tools: `Polars`, `scikit-learn`, `Pydantic`, `ingestion.py`
 
 ---
 
 ### `02` — Your First Agent: One Crew Member
 **A single agent, two tools, a classification.**
+Time: ~3 minutes
 
-`ingestion.py` functions become LangGraph tools. One agent calls `load_lightcurve`, passes the result to `validate_lightcurve`, reasons over the `ValidationReport`, and returns a structured transit classification. Claude Haiku is the default crew member — swap the `base_url` for AI Navigator to fly offline.
+`ingestion.py` functions become LangGraph tools. One agent calls `load_lightcurve`, passes the result to `validate_lightcurve`, reasons over the `ValidationReport`, and returns a structured transit classification. Claude Haiku is the default crew member — swap the `base_url` for AI Navigator or Anaconda Desktop to fly offline. Demo can be completed without model access, but stops at what will be served to the model.
 
 Default LLM: `claude-haiku-4-5-20251001` via Anthropic API, or AI Navigator local server.
 
-Tools: LangGraph, Anaconda MCP, `openai` client
+Tools: `LangGraph`, `Anthropic` or `openai` client
 
 ---
 
 ### `03` — Multi-Agent Architecture: Assemble the Crew
 **Two agents, one supervisor, `foreach` parallelism across 50 targets.**
 
-`DataAgent` and `AnalysisAgent` fly in formation, coordinated by a LangGraph supervisor. Metaflow wraps the whole operation as a `FlowSpec` with `@conda` per step — each agent role gets its own isolated, lockable environment. A dependency conflict between Polars and LangGraph is structurally impossible.
+`DataAgent` and `AnalysisAgent` fly in formation, coordinated by a LangGraph supervisor. Metaflow wraps the whole operation as a `FlowSpec` — each agent role gets its own isolated, lockable environment. A dependency conflict between Polars and LangGraph is structurally impossible.
 
 ```
 start → ingest (polars, scikit-learn)
       → analyze (openai, langgraph)
       → join → end
-Each step: its own @conda env, @retry, auditable supply chain.
 ```
 
-Deployed to Outerbounds, AWS EKS, or a Linux box + cron. Flow code unchanged for all three. `deploy/` has the guides.
-
-Tools: LangGraph, Metaflow 2.18+, `@conda` per step, Outerbounds
+Tools: `LangGraph`, `Metaflow` 2.18+, `FlowSpec`
 
 ---
 
