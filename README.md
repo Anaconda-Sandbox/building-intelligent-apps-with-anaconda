@@ -335,7 +335,7 @@ By the end of this curriculum, you will be able to:
 # Anaconda Distribution or Miniconda
 # https://www.anaconda.com/download
 
-conda --version   # 25.x or later
+conda --version   # 26.5.x or later
 
 # Free Anaconda account — required for AI Navigator and Platform features
 # https://anaconda.com
