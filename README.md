@@ -253,16 +253,6 @@ Tools: PyScript (Pyodide/WASM), BeeWare (Briefcase + Toga)
 
 ---
 
-### `100` — Example Applications
-Complete reference implementations using the patterns from the full curriculum. Working code to fork and adapt, not tutorial material.
-
----
-
-### `101` — Reference Library
-Supporting docs, decision guides, and best-practice write-ups: package manager decision tree, conda concepts and modern tooling, local/sovereign AI patterns, secure AI best practices, environment setup, IDE integrations.
-
----
-
 ## 🛠️ Core tools
 
 | Tool | Role | First seen |
