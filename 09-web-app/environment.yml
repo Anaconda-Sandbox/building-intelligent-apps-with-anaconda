@@ -1,0 +1,46 @@
+name: panel-app
+channels:
+  - defaults
+  - main-x  # New channel for pure wheels packages
+  # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
+  - conda-pypi
+dependencies:
+  # Core Python
+  - python=3.11
+
+  # ── Package management ────────────────────────────────────────────────────
+  - pipdeptree
+
+  # ── Jupyter ───────────────────────────────────────────────────────────────
+  - ipykernel
+  - jupyterlab
+
+  # ── Web app ───────────────────────────────────────────────────────────────
+  # panel        → LightcurveExplorer class, pn.extension("tabulator"), Tabulator
+  # holoviews    → HoloViews plot objects, hv.renderer
+  # hvplot       → hvplot.pandas accessor — df.hvplot.line(...)
+  # param        → param.Selector, param.Parameter, @param.depends
+  # bokeh        → Bokeh server backing Panel's websocket transport
+  - panel>=1.4
+  - holoviews>=1.18
+  - hvplot>=0.9
+  - param>=2.0
+  - bokeh>=3.4
+
+  # ── Data pipeline ─────────────────────────────────────────────────────────
+  # Same pipeline as Module 01 — IsolationForest anomaly detection
+  - pandas>=2.0
+  - numpy>=1.26
+  - scikit-learn>=1.4
+
+  # ── PyPI-only packages ────────────────────────────────────────────────────
+  # Some packages are only on PyPI —
+  # they move faster than conda-forge packaging can keep up.
+  # Best practice is to treat them as fast moving, less secure dependencies.
+  #
+  # conda-pypi (experimental, Q1 2026) is the safer long-term answer:
+  #   conda install anthropic openai
+  # Installs them natively as wheels alongside conda packages 
+  # (supporting pure Python wheels as a first class citizen/artifact in conda envs)
+  # Learn more: https://conda.github.io/conda-pypi/quickstart/
+  - panel-material-ui>=0.4

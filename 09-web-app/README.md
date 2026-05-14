@@ -23,9 +23,10 @@ Panel + Material UI    Python web app served by a Bokeh server
 ## Module structure
 
 ```
-08-panel-app/
+09-web-app/
 ├── README.md                  ← this file
-├── 08_panel_app.ipynb         ← narrated demo (7 min, pre-run)
+├── environment.yml            ← conda env: panel-app
+├── 09_panel_app.ipynb         ← narrated demo (pre-run)
 └── app.py                     ← the entire app — Panel + pipeline
 ```
 
@@ -36,7 +37,9 @@ A single file. The pipeline functions (`_synthesise`, `_validate`, `_detect_anom
 ## Quick start
 
 ```bash
-pip install panel panel-material-ui hvplot scikit-learn pandas numpy
+conda env create -f 09-web-app/environment.yml
+conda activate panel-app
+
 panel serve app.py --show
 # Opens http://localhost:5006/app
 ```
@@ -83,6 +86,28 @@ param.Selector ──► panel_material_ui.Select ──► target_name
 ```
 
 Every reactive piece is a `param.Parameter` or a Panel widget bound to one. No global state, no manual callbacks beyond the Run button.
+
+---
+
+## Environment
+
+```bash
+conda env create -f environment.yml
+conda activate panel-app
+```
+
+| Package | Role |
+|---|---|
+| `panel>=1.4` | App server, `LightcurveExplorer` class, Tabulator widget |
+| `holoviews>=1.18` | HoloViews plot objects and rendering |
+| `hvplot>=0.9` | `hvplot.pandas` accessor — `df.hvplot.line(...)` |
+| `param>=2.0` | `param.Selector`, `param.Parameter`, `@param.depends` |
+| `bokeh>=3.4` | Bokeh server backing Panel's websocket transport |
+| `pandas>=2.0`, `numpy>=1.26` | Pipeline data structures |
+| `scikit-learn>=1.4` | IsolationForest anomaly detection |
+| `panel-material-ui>=0.4` | Material Design components — Select, Button, Tabs (PyPI) |
+
+`panel-material-ui` is not yet on conda-forge and installs via the `pip:` section in `environment.yml`. `conda-pypi` (experimental, Q1 2026) is the safer long-term path once available.
 
 ---
 
