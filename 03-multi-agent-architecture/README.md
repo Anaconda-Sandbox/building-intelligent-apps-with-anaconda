@@ -11,7 +11,6 @@ This module introduces a higher-level architecture:
 
 - **LangGraph** as the orchestrator for multi-agent workflows
 - **MetaFlow** for workflow versioning, reproducibility, and model lifecycle tracking
-- **promptfoo** for prompt quality and model response evaluation
 
 Module 02 built one agent with four tools. This module adds two things on top of it — without touching the tools:
  
@@ -163,7 +162,6 @@ conda activate multi-agent
 | `langchain-core` | Core LangChain abstractions |
 | `langchain-openai` | OpenAI-compatible client integration |
 | `polars`, `numpy`, `scikit-learn`, `pydantic` | Data pipeline — inherited from Modules 01 and 02 |
-| `ragas` | Agent output evaluation — Faithfulness, AnswerRelevancy, ContextRelevance |
 | `ipykernel`, `jupyterlab` | Jupyter kernel registration and notebook interface |
 
 ---
@@ -177,7 +175,6 @@ conda activate multi-agent
 ├── environment.yml                  ← conda env: multi-agent (all conda-forge)
 ├── langgraph_orchestrator.py        ← LangGraph two-agent supervisor
 ├── metaflow_workflow.py             ← Metaflow 5-step FlowSpec
-└── ragas_evaluation.py              ← agent output evaluation (ragas)
 ```
 
 ---
@@ -187,20 +184,6 @@ conda activate multi-agent
 **LangGraph** is the agent loop — stateful graph execution, tool calling, conditional routing between agents. `DataAgent` owns the data quality gate; `AnalysisAgent` owns the science output. The supervisor routes between them.
 
 **Metaflow** is the infrastructure layer — step versioning, artifact storage, retry logic, and the ability to move the same flow to remote compute without changing a line of code.
-
-**ragas** evaluates the quality of the agent's output using LLM-as-judge metrics. It's a pure Python library — `conda install conda-forge::ragas` — no Node.js required. Three metrics are used:
-
-- **Faithfulness** — are the agent's claims grounded in the context it was given? A score below 0.7 means the agent hallucinated facts not present in the pipeline data.
-- **Answer Relevancy** — does the agent's answer actually address the question?
-- **Context Relevance** — was the retrieved context useful for producing the answer?
-
-```bash
-# Default: evaluate a pre-built answer (ragas judge still needs an LLM endpoint)
-python ragas_evaluation.py
-
-# Live: run the LangGraph agent first, then evaluate its actual output
-python ragas_evaluation.py --live
-```
 
 The evaluation uses the same `INFERENCE_BASE_URL` as the agent — AI Navigator, vLLM, or any OpenAI-compatible endpoint.
 

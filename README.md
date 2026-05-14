@@ -28,7 +28,7 @@ Our data is real: WASP-18 b, a hot Jupiter exoplanet caught transiting its star 
  DEEP SPACE         04   Deployment*            ~3 mins            swap the LLM endpoint, keep the agents - prerun notebook
                     05   GPU acceleration*      UNKNOWN            (experimental) Nemotron on NVIDIA iron, 47× faster - prerun notebook
                     06   App architecture       ~5-7 mins          harness, evals, vector memory, cards - build script
-                    07   Mission critical       ~5 mins            CVEs, conda-lock, air-gap, AIBOM - prerun notebook
+                    07   Mission critical       ~5 mins            CVEs, conda-lockfiles, air-gap, AIBOM - prerun notebook
  ────────────────────────────────────────────────────────────────────────────────
  EXTRAVEHICULAR     08   Native apps*           UNKNOWN            (experimental) PyScript (browser) + BeeWare (native) - build script
                     09   Web app                ~1-3 mins          Panel app (browser) - prerun notebook
@@ -200,7 +200,7 @@ Supply chain security isn't a feature you add at the end. It's the infrastructur
 ```
 Layer    Tool                               The question it answers
 ───────  ─────────────────────────────────  ─────────────────────────────────────────
-Lock     conda-lock                         Is this environment bit-for-bit reproducible?
+Lock     conda-lockfiles                    Is this environment bit-for-bit reproducible?
 Scan     anaconda-audit                     Does it contain known vulnerabilities?
 Gate     Anaconda Platform policy filter    Did anything vulnerable get in upstream?
 Pack     conda-pack                         Can we deploy without internet access?
@@ -209,14 +209,14 @@ Verify   AIBOM + SHA-256                    Is the model file what we think it i
 
 - `anaconda-audit scan --name app-architecture` — CVE scan against NVD/NIST, Anaconda-curated statuses (Active / Cleared / Mitigated / Disputed)
 - Policy filters block packages with CVE score ≥ 7 or Active status before they reach your channel
-- `conda-lock` turns a floating `environment.yml` into a pinned deployment contract
+- `conda-lockfiles` turns a floating `environment.yml` into a pinned deployment contract
 - `conda-pack` ships the entire environment as a relocatable tarball — Python, CUDA binaries, DuckDB memory store — to a machine with no conda, no internet
 - AIBOM (CycloneDX JSON from Anaconda Platform Model Catalog) includes SHA-256 checksums, benchmark scores, ethical considerations, software dependencies
 
 CI script: `scripts/lock_and_scan.sh` — lock → scan → gate, exits 1 on critical CVEs.
 Deploy script: `scripts/pack_and_ship.sh` — AIBOM verify → conda-pack → scp to target.
 
-Tools: `anaconda-audit`, `conda-lock`, `conda-pack`, Anaconda Platform, `security/verify_aibom.py`
+Tools: `anaconda-audit`, `conda-lockfiles`, `conda-pack`, Anaconda Platform, `security/verify_aibom.py`
 
 ---
 
@@ -253,22 +253,12 @@ Tools: PyScript (Pyodide/WASM), BeeWare (Briefcase + Toga)
 
 ---
 
-### `100` — Example Applications
-Complete reference implementations using the patterns from the full curriculum. Working code to fork and adapt, not tutorial material.
-
----
-
-### `101` — Reference Library
-Supporting docs, decision guides, and best-practice write-ups: package manager decision tree, conda concepts and modern tooling, local/sovereign AI patterns, secure AI best practices, environment setup, IDE integrations.
-
----
-
 ## 🛠️ Core tools
 
 | Tool | Role | First seen |
 |---|---|---|
 | `conda` / `conda-forge` | Environment management + package distribution | `00` |
-| `conda-lock` | Reproducible cross-platform lock files | `00`, `07` |
+| `conda-lockfiles` | Reproducible cross-platform lock files | `00`, `07` |
 | `conda-pack` | Portable environment tarballs for air-gap deployment | `07`, `08` |
 | `conda-pypi` | Safer PyPI wheel integration (experimental, Q1 2026) | `05` |
 | `anaconda-audit` | CVE scanning against NVD/NIST | `07` |
@@ -302,7 +292,7 @@ Supporting docs, decision guides, and best-practice write-ups: package manager d
 
 ## 🎯 Learning Objectives
 By the end of this curriculum, you will be able to:
-- Create, lock, and reproduce conda environments across platforms using conda-lock and conda-forge
+- Create, lock, and reproduce conda environments across platforms using conda-lockfiles and conda-forge
 - Audit a dependency graph for known CVEs using anaconda-audit and interpret Anaconda-curated vulnerability statuses
 - Package a complete Python environment, including CUDA binaries and embedded databases, as a relocatable tarball for air-gapped deployment
 - Build a production-grade ingestion pipeline with schema enforcement, Pydantic validation, and unsupervised anomaly detection

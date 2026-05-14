@@ -9,8 +9,7 @@ dependencies:
   # Core Python
   - python=3.11
 
-  # ── Package management and lock files  ────────────────────────────────────────
-  #  Move from conda-lock to conda-lockfile in base environment 
+  # ── Package management ────────────────────────────────────────────────────────
   - pipdeptree
   - conda-pack>=0.7  # portable environment tarballs for air-gap deployment
   

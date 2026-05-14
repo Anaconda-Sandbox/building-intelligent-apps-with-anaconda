@@ -188,11 +188,7 @@ All packages from conda-forge. No pip section.
 
 | Package | Role |
 |---|---|
-<<<<<<< HEAD
-| `metaflow>=2.18` | Workflow orchestration — `@catch`, `@retry`, `@card`, `foreach` |
-=======
 | `metaflow>=2.18` | Workflow orchestration and env setup — `@conda`, `@catch`, `@retry`, `@card`, `foreach` |
->>>>>>> working
 | `langgraph` | Agent runtime — `MemorySaver` checkpointer, durable execution |
 | `anthropic` | Primary inference — Claude Haiku default |
 | `openai>=1.30` | OpenAI-compatible client — AI Navigator / vLLM fallback |

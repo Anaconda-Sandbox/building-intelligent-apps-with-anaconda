@@ -9,7 +9,7 @@ dependencies:
   # Core Python
   - python=3.11
 
-  # Package management and lock files
+  # Package management
   - pipdeptree
 
   # Development and utilities

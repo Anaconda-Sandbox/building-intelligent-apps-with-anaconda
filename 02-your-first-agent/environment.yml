@@ -6,10 +6,10 @@ channels:
   # conda-pypi is the long-term solution for pip-only packages in conda environments, but it's still experimental as of Q1 2026.
   - conda-pypi
 dependencies:
+  # Core Python
   - python=3.11
 
-  # ── Package management and lock files  ────────────────────────────────────────
-  #  Move from conda-lock to conda-lockfile in base environment 
+  # ── Package management ────────────────────────────────────────────────────────
   - pipdeptree
  
   # ── Jupyter ───────────────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@
 # CI gate: lock the environment, scan for CVEs, fail on critical findings.
 #
 # Three-step supply chain check before any deployment:
-#   1. conda-lock  — pin every package including transitive deps
+#   1. conda-lockfiles  — pin every package including transitive deps
 #   2. anaconda-audit scan — check locked environment against NVD/NIST CVE data
 #   3. Gate — fail the CI job if critical (score >= 7, status Active) CVEs found
 #
@@ -15,7 +15,7 @@
 #   PLATFORM  — target platform for lock file (default: linux-64)
 #
 # Prerequisites:
-#   conda-lock installed:          conda install -c conda-forge conda-lock
+#   conda-lockfiles installed:          update to conda 26.5.0
 #   anaconda-env-manager installed in base:
 #                                  conda install --name base anaconda-cloud::anaconda-env-manager
 #   Authenticated to Anaconda.com: anaconda login --at anaconda.com
@@ -52,14 +52,15 @@ echo ""
 
 if ! command -v conda-lock &>/dev/null; then
     echo "Error: conda-lock not found. Install with:"
-    echo "  conda install -c conda-forge conda-lock"
+    echo "  update to the latest version of conda"
     exit 1
 fi
 
-conda-lock lock \
-    --file "${ENV_YML}" \
+conda export \
+    --name mission-critical-lock \
+    --format conda-lock-v1 \
     --platform "${PLATFORM}" \
-    --lockfile "${LOCK_FILE}"
+    --file "${LOCK_FILE}"
 
 echo "  ✓  Lock file generated: ${LOCK_FILE}"
 echo "     Commit this file — it is your deployment contract."
@@ -69,9 +70,10 @@ echo ""
 echo "Step 2/3 — Installing locked environment"
 echo ""
 
-conda-lock install \
+conda create install \
     --name "${ENV_NAME}-locked" \
-    "${LOCK_FILE}"
+    --file "${LOCK_FILE}" \
+    --format conda-lock-v1
 
 echo "  ✓  Environment installed: ${ENV_NAME}-locked"
 
