@@ -213,10 +213,10 @@ Verify   AIBOM + SHA-256                    Is the model file what we think it i
 - `conda-pack` ships the entire environment as a relocatable tarball — Python, CUDA binaries, DuckDB memory store — to a machine with no conda, no internet
 - AIBOM (CycloneDX JSON from Anaconda Platform Model Catalog) includes SHA-256 checksums, benchmark scores, ethical considerations, software dependencies
 
-CI script: `scripts/lock_and_scan.sh` — lock → scan → gate, exits 1 on critical CVEs.
-Deploy script: `scripts/pack_and_ship.sh` — AIBOM verify → conda-pack → scp to target.
+CI script: `lock_and_scan.sh` — lock → scan → gate, exits 1 on critical CVEs.
+Deploy script: `pack_and_ship.sh` — AIBOM verify → conda-pack → scp to target.
 
-Tools: `anaconda-audit`, `conda-lockfiles`, `conda-pack`, Anaconda Platform, `security/verify_aibom.py`
+Tools: `anaconda-audit`, `conda-lockfiles`, `conda-pack`, Anaconda Platform, `verify_aibom.py`
 
 ---
 
@@ -232,7 +232,7 @@ Two options, same five exoplanet targets, same IsolationForest pipeline, same `V
 Launched by Anaconda at PyCon US 2022. Pyodide loads a full CPython interpreter into your browser tab via WebAssembly. One HTML file. Select a target → Run Analysis → validation report + three matplotlib charts render in the page. numpy, pandas, matplotlib, scikit-learn all bundled in Pyodide.
 
 ```bash
-cd option-a-pyscript && python -m http.server 8080
+cd 08-native-apps && python -m http.server 8080
 # open http://localhost:8080 — that's it
 ```
 
@@ -241,7 +241,7 @@ cd option-a-pyscript && python -m http.server 8080
 Funded by Anaconda. Briefcase packages the same Python source into native apps for every platform. Toga maps Python widgets to native OS controls (NSTableView on macOS, GtkTreeView on Linux, ListView on Windows). One `pyproject.toml`, six targets.
 
 ```bash
-cd option-b-beeware
+cd 08-native-apps
 pip install briefcase
 briefcase dev        # opens a native window immediately
 briefcase package    # → .dmg / .msi / AppImage / .ipa / .aab
@@ -250,6 +250,29 @@ briefcase package    # → .dmg / .msi / AppImage / .ipa / .aab
 See `BUILDING.md` for the complete per-platform build guide including signing, distribution, and the full Briefcase command lifecycle.
 
 Tools: PyScript (Pyodide/WASM), BeeWare (Briefcase + Toga)
+
+---
+
+### `09` — Web App: Ground Control
+**The same pipeline, served as an interactive web app.**
+Time: ~1-3 minutes
+
+An addendum. The answer to: *how do you put this in front of a non-Python user?*
+
+The Module 01 IsolationForest pipeline becomes a Panel app served by a Bokeh server. Same five exoplanet targets, same `ValidationReport` schema — what changes is the delivery layer. Reactive widgets stream updates to the browser over a websocket as the pipeline runs. No page reloads, no CSV, no setup for the end user.
+
+```bash
+conda env create -f 09-web-app/environment.yml
+conda activate panel-app
+panel serve app.py --show
+# Opens http://localhost:5006/app
+```
+
+The app surfaces the pipeline as four tabs per run: a live pipeline log, the full ValidationReport as formatted stats, a sortable Tabulator grid of the top 50 anomalous points, and a phase-folded lightcurve plot with anomalies highlighted and the IsolationForest score panel below.
+
+`panel-material-ui` provides the Material Design sidebar, tabs, and buttons. `hvplot` turns the pipeline's pandas DataFrames into HoloViews plots in a single method call.
+
+Tools: `Panel`, `HoloViews`, `hvplot`, `panel-material-ui`, `param`
 
 ---
 
@@ -276,6 +299,7 @@ Tools: PyScript (Pyodide/WASM), BeeWare (Briefcase + Toga)
 | DuckDB | Embedded vector store for agent memory | `06` |
 | PyScript | Python in the browser via WebAssembly | `08` |
 | BeeWare | Native mobile/desktop apps in Python | `08` |
+| Panel / HoloViz | Reactive web app framework on top of Bokeh | `09` |
 
 ## ⚙️ Optional tools
 
@@ -303,6 +327,7 @@ By the end of this curriculum, you will be able to:
 - Add graceful degradation, eval-as-CI, per-run observability cards, and cross-run vector memory to an existing Metaflow pipeline
 - Verify model provenance using a CycloneDX AIBOM and SHA-256 checksums before deployment
 - Run the same Python analysis pipeline in a browser tab via PyScript and as a native desktop application via BeeWare Briefcase
+- Serve a validated pipeline as an interactive Panel web app with reactive widgets and live plot updates
 
 ## 🌠 Prerequisites
 
@@ -328,7 +353,7 @@ WASP-18 b is a real exoplanet — a hot Jupiter 10× the mass of Jupiter, comple
 
 It's a good dataset for this curriculum because it has a real anomaly (the transit dip), realistic noise, and enough physical context that the agent's reasoning outputs make intuitive sense. You don't need to know astrophysics — but if you look it up, the numbers check out.
 
-`wasp18b_lightcurve.csv` is in `01-data-sources/`. Run `fetch_data.py` to pull a fresh copy from the STScI archive.
+`wasp18b_lightcurve.csv` is bundled in each module directory that uses it.
 
 ---
 
