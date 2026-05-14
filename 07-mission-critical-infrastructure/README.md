@@ -16,7 +16,7 @@ Five layers:
 ```
 Layer                Tool(s)                          What it answers
 ───────────────────  ───────────────────────────────  ─────────────────────────────────────────
-1. Lock              conda-lock                       "Is this environment reproducible?"
+1. Lock              conda-lockfiles                  "Is this environment reproducible?"
 2. Scan              anaconda-audit                   "Does it have known vulnerabilities?"
 3. Gate              Anaconda Platform policy filter  "Did anything vulnerable get in upstream?"
 4. Pack + ship       conda-pack                       "Can we deploy it without internet access?"
@@ -54,7 +54,7 @@ conda env create -f environment.yml
 conda activate mission-critical
 
 # Step 1 — lock the environment from Module 06
-conda-lock -f ../06-app-architecture/environment.yml -p linux-64
+conda export --name app-arch-locked --file ../06-app-architecture/environment.yml --platform linux-64
 
 # Step 2 — scan it
 conda install --name base anaconda-cloud::anaconda-env-manager

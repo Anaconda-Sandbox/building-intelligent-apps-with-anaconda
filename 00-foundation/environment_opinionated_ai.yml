@@ -8,7 +8,6 @@ dependencies:
   - python=3.11
 
   # Package management and lock files
-  - conda-lock # Old version of environment lock, now moving to conda-lockfile in base environment
   - pipdeptree
 
   # Development and utilities

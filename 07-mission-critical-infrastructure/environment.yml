@@ -10,8 +10,6 @@ dependencies:
   - python=3.11
 
   # ── Package management and lock files  ────────────────────────────────────────
-  #  Move from conda-lock to conda-lockfile in base environment 
-  - conda-lockfile  # Reproducible cross-platform lock files
   - pipdeptree
   - conda-pack>=0.7  # portable environment tarballs for air-gap deployment
   
