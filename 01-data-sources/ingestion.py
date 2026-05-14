@@ -110,7 +110,7 @@ def load_lightcurve(filepath: Path, schema: dict) -> pl.DataFrame:
     """
     if not filepath.exists():
         raise FileNotFoundError(
-            f"{filepath} not found. Run fetch_data.py or download "
+            f"{filepath} not found. Download "
             f"wasp18b_lightcurve.csv from https://github.com/dbouquin/polars_demo"
         )
 

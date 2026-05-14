@@ -40,10 +40,7 @@ def main() -> None:
             "Error: wasp18b_lightcurve.csv not found.\n"
             "Expected at: 01-data-sources/wasp18b_lightcurve.csv\n\n"
             "Quick fix:\n"
-            "  cp 100-example-applications/polars_demo/wasp18b_lightcurve.csv "
-            "01-data-sources/\n"
-            "Or fetch a fresh copy:\n"
-            "  python 100-example-applications/polars_demo/fetch_data.py"
+            "  git submodule update --init --recursive"
         )
         sys.exit(1)
 
